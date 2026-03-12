@@ -334,8 +334,8 @@ The methodology is tech-stack-agnostic. Here's how to adapt it:
 ### For Any Language/Framework
 1. **Copy `templates/copilot-instructions.md`** and customize for your stack
 2. **Define your layer rules**: What calls what? What's forbidden?
-3. **Set your DI pattern**: Match your project's existing convention
-4. **List your naming conventions**: Namespaces, classes, methods, tests
+3. **Set your design patterns**: Match your project's established conventions (DI, repository, service layer, etc.)
+4. **List your naming conventions**: Packages/namespaces, classes, methods, tests
 5. **Document your anti-patterns**: What specific mistakes does your stack invite?
 
 ### For Any Cloud Provider

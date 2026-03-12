@@ -119,7 +119,7 @@ Enterprise applications don't exist in isolation. They consume from message queu
 "The AI wrote it" is not a valid answer during a security audit, compliance review, or incident post-mortem. Every change needs a clear rationale, review trail, and rollback plan. Vibe coding produces none of these.
 
 ### 4. Institutional Knowledge
-Legacy enterprise systems contain decades of business logic encoded in ways that don't appear in documentation. MuleSoft DataWeave transforms, AS/400 field mappings, database column naming conventions — the AI doesn't know these, and vibe coding doesn't seek them out. Deep Onboarding does.
+Legacy enterprise systems contain decades of business logic encoded in ways that don't appear in documentation. Custom ETL transforms, mainframe field mappings, database column naming conventions, hand-rolled serialization formats — the AI doesn't know these, and vibe coding doesn't seek them out. Deep Onboarding does.
 
 ### 5. Team Scale
 One engineer doing vibe coding might get lucky. A team of 20 doing vibe coding produces chaos. Enterprise AI adoption requires shared methodology — standardized prompts, review protocols, and quality gates — not individual heroics.

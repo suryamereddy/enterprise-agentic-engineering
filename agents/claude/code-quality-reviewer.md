@@ -37,7 +37,7 @@ You are a Code Quality Specialist focused on maintainability, readability, and a
 
 5. **Async Patterns**
    - Async all the way (no sync-over-async)
-   - Proper cancellation token propagation
+   - Proper cancellation / timeout propagation
    - No fire-and-forget without justification
 
 **Output Format:**

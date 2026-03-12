@@ -96,7 +96,9 @@ Build the muscle memory for verifying AI output against original behavior before
 git stash
 
 # 3. Run tests on the ORIGINAL code
-dotnet test  # or your framework's test command
+# Use your project's test command:
+#   dotnet test | mvn test | pytest | npm test | go test ./...
+your-test-command
 
 # 4. Does the original work as expected?
 # YES → Your AI changes might have introduced a bug
@@ -106,7 +108,7 @@ dotnet test  # or your framework's test command
 git stash pop
 
 # 6. Run the same tests
-dotnet test
+your-test-command
 
 # 7. Compare results — understand every difference
 ```

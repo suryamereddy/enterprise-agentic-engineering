@@ -49,7 +49,7 @@ The structure is repeatable and maintainable across all projects.
 
 ## After Building
 
-1. Build the solution
+1. Build the project
 2. Run tests (unit tests only in CI)
-3. Verify no compiler warnings
+3. Verify no compiler/linter warnings
 4. Ready for Expert Code Review

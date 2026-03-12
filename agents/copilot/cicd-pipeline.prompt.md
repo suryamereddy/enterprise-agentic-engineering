@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@{SHA}
       - name: Setup runtime
-        uses: actions/setup-dotnet@{SHA}  # or setup-node, setup-python
+        uses: actions/setup-{runtime}@{SHA}  # setup-dotnet, setup-java, setup-node, setup-python
       - name: Restore dependencies
         run: # package restore command
       - name: Build

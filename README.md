@@ -14,7 +14,7 @@
 *One engineer. 72 AI sessions. 2,938 interactions. 12+ production applications built or transformed.*
 *40+ microservices. 3M+ database records. 4,000–6,000 hours of manual work replaced.*
 
-**This is not a tutorial. This is not a demo. This is a battle-tested framework extracted from 20 months of shipping production software with AI — across .NET, Azure, Kafka, Cosmos DB, and multi-cloud infrastructure.**
+**This is not a tutorial. This is not a demo. This is a battle-tested framework extracted from 20 months of shipping production software with AI — across Java, .NET, Python, TypeScript, and Node.js on multi-cloud infrastructure.**
 
 [Read the Manifesto](MANIFESTO.md) · [The Methodology](docs/methodology.md) · [Case Studies](docs/case-studies.md) · [Start Using It](#quick-start)
 
@@ -295,14 +295,14 @@ The methodology is tech-stack-agnostic, but for context, these are the technolog
 
 | Layer | Technologies |
 |-------|-------------|
-| **Languages** | C#/.NET 8+, Python, TypeScript, Java |
-| **Cloud** | Azure (Functions, Container Apps, Cosmos DB, Service Bus, Key Vault) |
-| **Streaming** | Confluent Cloud (Kafka, Flink SQL, Schema Registry) |
-| **Infrastructure** | Pulumi (C#), Terraform |
-| **CI/CD** | GitHub Actions, JFrog Artifactory |
+| **Languages** | Java, C#/.NET, Python, TypeScript/Node.js |
+| **Cloud** | Azure, GCP, AWS (Functions, Container Apps, managed databases, messaging) |
+| **Streaming** | Confluent Cloud (Kafka, Flink SQL), AWS Kinesis, Event-driven architectures |
+| **Infrastructure** | Pulumi, Terraform, CloudFormation |
+| **CI/CD** | GitHub Actions, GitLab CI, JFrog Artifactory |
 | **AI Tools** | GitHub Copilot, Claude Code, Gemini |
-| **Integration** | MuleSoft (XAPI/PAPI/SAPI), REST APIs, Event-Driven |
-| **Observability** | Application Insights, Log Analytics |
+| **Integration** | REST APIs, GraphQL, gRPC, Event-Driven |
+| **Observability** | Application Insights, Datadog, CloudWatch, ELK |
 
 ---
 

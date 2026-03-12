@@ -9,7 +9,7 @@
 
 **Company**: [YOUR_COMPANY]
 **Domain**: [YOUR_DOMAIN — e.g., logistics, fintech, healthcare, e-commerce]
-**Stack**: [YOUR_STACK — e.g., .NET 8, Azure Functions v4, Cosmos DB, Kafka]
+**Stack**: [YOUR_STACK — e.g., Java 21 / Spring Boot, .NET 8, Python 3.12, Node.js 20, PostgreSQL, Kafka]
 **Environments**: [YOUR_ENVS — e.g., DEV → QA → PROD]
 
 ---
@@ -62,22 +62,21 @@ All projects follow a **layered architecture** with clear separation of concerns
 
 ### Constants (STRICT)
 
-All magic strings and numbers MUST go into `Common/Constants.cs`:
+All magic strings and numbers MUST go into a dedicated constants file:
 
-```csharp
-public static class Constants
-{
-    public const string DatabaseConnectionString = "DatabaseConnectionString";
-    public const string UnitTest = "Unit-Test";
-    // Add your constants here
-}
 ```
+Constants.DATABASE_CONNECTION_STRING = "DatabaseConnectionString"
+Constants.UNIT_TEST = "Unit-Test"
+// Add your constants here
+```
+
+Adapt to your language — `Constants.cs`, `Constants.java`, `constants.py`, `constants.ts`, etc.
 
 ### Async/Await
 
 - All I/O operations MUST be async
-- Methods returning Task MUST have `Async` suffix
-- Never use `.Result` or `.Wait()` — always `await`
+- Methods returning async results should follow naming conventions (`Async` suffix in C#, etc.)
+- Never block on async operations — always await/then properly
 
 ---
 
@@ -152,7 +151,7 @@ public static class Constants
 1. **Deep Onboard First** — Never modify code you haven't fully understood
 2. **Trust but Verify** — AI output is a draft, not gospel
 3. **Review Your Own Code** — 5+ review rounds for critical paths
-4. **Never Double-Retry** — If the library retries, don't add Polly/retry on top
+4. **Never Double-Retry** — If the library retries natively, don't add application-level retry on top
 5. **Document as You Build** — Architecture diagrams and runbooks are deliverables
 6. **One-Click or It Doesn't Count** — Setup must be a single command
 7. **DLQ Everything** — Every message consumer needs a dead letter queue

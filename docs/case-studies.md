@@ -10,25 +10,25 @@
 **342 AI messages · 12 technologies · The session that birthed the methodology**
 
 ### Context
-A complex .NET microservice — Azure Functions consuming HR employee data from a streaming pipeline (Confluent Flink SQL with Java UDFs for address, email, and phone normalization), transforming through multiple engines, persisting to Cosmos DB with cross-reference mapping (4 external IDs per entity), handling async request-reply via EventHub for TMS reconciliation, and publishing entity-changed events downstream. The codebase included a three-tier DLQ system with webhook alerting, ETag-based optimistic concurrency, Polly circuit breakers, and a unified migration toolkit.
+A complex event-driven microservice — serverless functions consuming HR employee data from a streaming pipeline (Flink SQL with Java UDFs for address, email, and phone normalization), transforming through multiple business logic engines, persisting to a document database with cross-reference mapping (4 external IDs per entity), handling async request-reply for TMS reconciliation, and publishing entity-changed events downstream. The codebase included a three-tier DLQ system with webhook alerting, ETag-based optimistic concurrency, circuit breakers with retry policies, and a unified migration toolkit.
 
 ### What Happened
 The engineer directed: *"Go through the whole repo and walk through it with me."* Then kept pushing deeper: *"Can you even deeper?"* and *"Every single detail."*
 
 Over 342 messages, the AI performed a file-by-file audit of every layer:
-- **Functions client**: Every HTTP trigger, timer trigger, Kafka trigger, and Service Bus trigger documented
-- **Managers**: Orchestration layer with Factory DI pattern, every dependency mapped
-- **Engines**: Business logic isolated and documented — delta detection, field-level change tracking, recursive manager resolution
-- **Accessors**: Every Cosmos container, every external API call, every retry policy
-- **Utilities**: OAuth2 token management, HTTP client factories, Kafka producer patterns
-- **Common**: Constants class with 50+ configuration keys, helper methods, base classes
+- **Entry points**: Every HTTP trigger, timer trigger, Kafka trigger, and message queue trigger documented
+- **Orchestration**: Service layer with established dependency injection patterns, every dependency mapped
+- **Business logic**: Rules isolated and documented — delta detection, field-level change tracking, recursive entity resolution
+- **Data access**: Every database container, every external API call, every retry policy
+- **Utilities**: OAuth2 token management, HTTP client pooling, Kafka producer patterns
+- **Shared modules**: Constants with 50+ configuration keys, helper methods, base classes
 
-The session mapped the full Flink SQL pipeline from raw data ingestion through normalization (3 UDFs: address, email, phone) to the Functions trigger. It documented every Kafka consumer/producer, every DLQ routing path, and every filter configuration.
+The session mapped the full Flink SQL pipeline from raw data ingestion through normalization (3 Java UDFs: address, email, phone) to the serverless trigger. It documented every Kafka consumer/producer, every DLQ routing path, and every filter configuration.
 
 ### Outcome
 The session produced the first version of the **Deep Onboarding** protocol — the 8-document suite that became standard across all subsequent repositories. The process surfaced:
-- Undocumented EventHub integration paths
-- Configuration dependencies between Azure App Configuration and the Kafka offset initializer
+- Undocumented event hub integration paths
+- Configuration dependencies between centralized app config and the stream offset initializer
 - Cross-reference mapping complexity not captured in any existing documentation
 - The service had 664 tests across 8 test projects — but testing strategy gaps in specific DLQ scenarios
 
@@ -79,7 +79,7 @@ This protocol is now applied to every conversion, refactoring, and migration tas
 **229 messages · Eliminating an entire middleware API layer**
 
 ### Context
-A production microservice that relied on a middleware API layer (MuleSoft SAPI) to communicate with an external TMS (Transportation Management System). Every API call went: `.NET App → MuleSoft API → TMS` — adding latency, operational complexity, and a single point of failure. The goal: direct integration, eliminating the middleware hop entirely.
+A production microservice that relied on a middleware API gateway to communicate with an external TMS (Transportation Management System). Every API call went: `App → Middleware API → TMS` — adding latency, operational complexity, and a single point of failure. The goal: direct integration, eliminating the middleware hop entirely.
 
 ### Phase 1: Deep Understanding (Messages 1–23)
 Mapped every Kafka consumer, Cosmos accessor, and middleware integration point. Documented exact requirements: POST for new entities, PATCH for updates. Defined delta detection: field-level comparison with `latestChanges` metadata tracking.
@@ -90,8 +90,8 @@ Global codebase renaming — every reference to the middleware layer was renamed
 ### Phase 3: API Client + Event Producer (Messages 28–43)
 Built the direct API client with:
 - OAuth2 client credentials with automatic token refresh
-- `HttpClientFactory` for connection pooling
-- Polly retry with exponential backoff
+- Connection pooling via HTTP client management
+- Retry with exponential backoff (circuit breaker pattern)
 - Structured logging at every boundary
 
 Built the Kafka producer for entity-changed events with correlation ID headers.
@@ -114,13 +114,13 @@ The most architecturally complex feature: walking up the management chain recurs
 Universal DLQ topic for all failure modes. Architecture diagrams updated. Deployment plan documented.
 
 ### Outcome
-The middleware layer was completely eliminated. Direct API integration reduced:
+The middleware layer was completely eliminated for that service. Direct API integration reduced:
 - **Latency**: One network hop eliminated per API call
 - **Operational surface**: One fewer service to monitor, deploy, and debug
 - **Failure modes**: Removed middleware-specific errors (timeout, capacity, version mismatch)
 
 ### Lesson
-**Deep Onboarding the middleware first was essential.** The migration succeeded because every DataWeave transformation, every error path, and every configuration property in the middleware was understood before the first line of replacement code was written. The AI couldn't replace what it didn't understand.
+**Deep Onboarding the middleware first was essential.** The migration succeeded because every data transformation, every error path, and every configuration property in the middleware was understood before the first line of replacement code was written. The AI couldn't replace what it didn't understand.
 
 ---
 
@@ -149,10 +149,10 @@ Incoming Event → Compute SHA-256 Hash
 **Result**: 78% of incoming events were duplicates or no-ops. Hash-based detection eliminated them at O(1) cost per message.
 
 ### Phase 3: Inline Processing
-Replaced the timer-based outbox with Cosmos DB Change Feed processing. Every database write triggers immediate downstream processing — no polling, no batch delays. Multi-replica safety via machine-name-based instance naming.
+Replaced the timer-based outbox with database change stream processing. Every database write triggers immediate downstream processing — no polling, no batch delays. Multi-replica safety via machine-name-based instance naming.
 
 ### Phase 4: Migration Tool
-Built a Cosmos data consolidation tool with:
+Built a database consolidation tool with:
 - Dry-run mode (validate without modifying)
 - Environment-specific execution (dev, QA, production)
 - 10 concurrent processors, 100-record batches
@@ -222,7 +222,7 @@ Building fast without methodology produces something that works today and breaks
 **166 messages · CI/CD with rollback capability**
 
 ### Context
-An enterprise .NET application needed production-grade CI/CD: multi-environment deployment (Dev → QA → Production), artifact management, security scanning, and most critically — **one-click rollback** to any previous version.
+An enterprise application needed production-grade CI/CD: multi-environment deployment (Dev → QA → Production), artifact management, security scanning, and most critically — **one-click rollback** to any previous version.
 
 ### Phase 1: Deploy Workflow (Messages 1–40)
 - Multi-environment deployment with checkbox selection

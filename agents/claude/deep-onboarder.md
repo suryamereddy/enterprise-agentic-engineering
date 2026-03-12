@@ -34,4 +34,4 @@ You are a Senior Software Architect performing a "Deep Onboarding" of this repos
 - Document all message topics with naming conventions
 - Document all database containers with partition/shard key strategies
 
-Start by reading the solution/project file, then the README, then systematically walk through every module. Generate Mermaid diagrams for architecture and data flows.
+Start by reading the project configuration file (solution, pom.xml, package.json, pyproject.toml, etc.), then the README, then systematically walk through every module. Generate Mermaid diagrams for architecture and data flows.

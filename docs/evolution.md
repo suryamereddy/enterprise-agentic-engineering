@@ -15,8 +15,8 @@
 | Total duration | 20 months (Jul 2024 – Mar 2026) |
 | Services touched | 40+ |
 | Applications built/transformed | 12+ |
-| Languages used | C#, Python, Java, TypeScript, SQL, DataWeave, YAML, HCL |
-| Cloud platforms | Azure, GCP, Confluent Cloud |
+| Languages used | Java, C#, Python, TypeScript, SQL, YAML, HCL |
+| Cloud platforms | Azure, GCP, AWS |
 
 ---
 
@@ -59,7 +59,7 @@ By the end of that session, the Deep Onboarding protocol existed — even if it 
 - Depth-first exploration of complex systems
 - First marathon sessions (100+ messages)
 - Methodology patterns emerging organically
-- Technologies: .NET microservices, MuleSoft analysis, Confluent streaming
+- Technologies: .NET microservices, Java services, middleware API analysis, streaming pipelines
 
 ### Era 3: Mastery (Jan 2026 – Mar 2026)
 **56 sessions · 2,406 messages · The explosion**
@@ -95,21 +95,22 @@ Quick Fix (1-2 msgs)         █████████████████
 |------------|----------|-----------|
 | Event Streaming (Kafka/Confluent) | 22 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
 | Version Control (Git) | 21 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
-| Document Database (Cosmos DB) | 19 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
-| Cloud Platform (Azure) | 17 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
+| Document/NoSQL Database | 19 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
+| Cloud Platforms (Azure/GCP/AWS) | 17 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
 | CI/CD Pipelines | 17 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
 | Containerization (Docker) | 17 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
 | Infrastructure as Code | 16 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
+| Java / Spring | 16 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
 | C# / .NET | 16 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
 | SQL | 16 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
 | Microservices | 15 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
-| Middleware APIs | 15 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
+| Middleware / API Gateways | 15 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
 | YAML Configuration | 15 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
-| Message Queues (Service Bus) | 10 | ▓▓▓▓▓▓▓▓▓▓ |
-| Python | 10 | ▓▓▓▓▓▓▓▓▓▓ |
-| Java | 10 | ▓▓▓▓▓▓▓▓▓▓ |
 | JavaScript/TypeScript | 14 | ▓▓▓▓▓▓▓▓▓▓▓▓▓▓ |
+| Python | 10 | ▓▓▓▓▓▓▓▓▓▓ |
+| Message Queues (Service Bus) | 10 | ▓▓▓▓▓▓▓▓▓▓ |
 | API Design | 8 | ▓▓▓▓▓▓▓▓ |
+| Node.js | 8 | ▓▓▓▓▓▓▓▓ |
 | GCP | 5 | ▓▓▓▓▓ |
 
 ---

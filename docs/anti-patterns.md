@@ -24,7 +24,7 @@
 
 **What happens**: Changes that seem isolated have cascading effects. A "simple" refactoring breaks an integration path that wasn't visible without full context. Configuration dependencies surface in production, not in development.
 
-**Real example**: Modifications to a service's consumer configuration caused offset management failures because the worker's Kafka initializer relied on Azure App Configuration settings that weren't documented anywhere — only discoverable through exhaustive file reading.
+**Real example**: Modifications to a service's consumer configuration caused offset management failures because the background worker's Kafka initializer relied on centralized configuration settings that weren't documented anywhere — only discoverable through exhaustive file reading.
 
 **Prevention**: Always Deep Onboard before modifying. If you're tempted to skip it for a "quick fix," that's exactly when you need it most.
 
@@ -46,17 +46,18 @@
 
 **What happens**: A single failed operation gets retried exponentially: library retry (3 attempts) × application retry (3 attempts) = 9+ attempts. This amplifies load on failing services, delays DLQ routing, and produces confusing logs.
 
-**Real example**: A Kafka producer had both librdkafka native retry AND Polly retry configured. A downstream service outage caused 9x the expected load when message delivery resumed, triggering cascading failures.
+**Real example**: A Kafka producer had both library-native retry AND application-level retry configured. A downstream service outage caused 9x the expected load when message delivery resumed, triggering cascading failures.
 
 **Prevention**: Before adding retry logic, check if the underlying library has native retry. If it does, only handle the *final* failure at the application level.
 
 ```
 ❌ WRONG — Library already retries
-retryPolicy.ExecuteAsync(() => producer.ProduceAsync(topic, message));
+retryPolicy.execute(() -> producer.send(topic, message));  // Java
+await retryPolicy.ExecuteAsync(() => producer.ProduceAsync(topic, message));  // C#
 
 ✅ CORRECT — Handle only final failure
-try { await producer.ProduceAsync(topic, message); }
-catch (ProduceException ex) { await PublishToDlqAsync(message, ex); }
+try { producer.send(topic, message); }
+catch (ProduceException ex) { publishToDlq(message, ex); }
 ```
 
 ---
@@ -109,17 +110,17 @@ uses: actions/checkout@<full-commit-sha>
 
 ---
 
-### 9. Mixing Dependency Injection Patterns
-**What it is**: Using Constructor DI in a project that uses the Factory pattern (or vice versa).
+### 9. Mixing Design Patterns Within a Project
+**What it is**: Using one architectural pattern in a project that has already established a different convention (e.g., introducing constructor injection in a project using service locator, or mixing Active Record with Repository pattern).
 
-**What happens**: Inconsistent service resolution. Some services are resolved via `UtilityFactory.ResolveRequiredService<T>()`, others via constructor injection. New team members can't predict which pattern applies. Testing becomes harder because Moq and factory resolution require different setup.
+**What happens**: Inconsistent code paths. Some services resolved one way, others another way. New team members can't predict which pattern applies. Testing becomes harder because different setup is needed depending on the resolution mechanism.
 
-**Prevention**: Match the project's existing pattern. Always. If the project has `FactoryBase`, use Factory. If it has `*Resolver.cs`, use Constructor DI. Never introduce a different pattern.
+**Prevention**: Match the project's existing pattern. Always. If the project uses service locator, follow it. If it uses constructor injection, follow that. Never introduce a different pattern into an established codebase without an explicit migration plan.
 
 ---
 
 ### 10. Cross-Partition Database Queries
-**What it is**: Querying a partitioned database (Cosmos DB, DynamoDB, etc.) without specifying the partition key.
+**What it is**: Querying a partitioned database (Cosmos DB, DynamoDB, Cassandra, etc.) without specifying the partition key.
 
 **What happens**: The query scans every partition — dramatically increasing cost and latency. A query that should cost 5 RUs and take 10ms instead costs 500 RUs and takes 2 seconds.
 
@@ -128,29 +129,29 @@ uses: actions/checkout@<full-commit-sha>
 ---
 
 ### 11. Sync-over-Async
-**What it is**: Using `.Result` or `.Wait()` on async operations instead of `await`.
+**What it is**: Blocking on async operations instead of properly awaiting them (e.g., `.Result`/`.Wait()` in C#, `asyncio.run()` inside an existing event loop in Python, or blocking `CompletableFuture.get()` in Java without timeout).
 
-**What happens**: Thread pool starvation under load. Deadlocks in UI contexts. Performance degradation that only appears under high concurrency — invisible in development, catastrophic in production.
+**What happens**: Thread pool starvation under load. Deadlocks in UI or web contexts. Performance degradation that only appears under high concurrency — invisible in development, catastrophic in production.
 
-**Prevention**: Async all the way down. Every I/O method is async, every consumer `await`s it, all the way to the entry point. AI agents should be instructed to flag any `.Result` or `.Wait()` call.
+**Prevention**: Async all the way down. Every I/O method is async, every consumer awaits it, all the way to the entry point. AI agents should be instructed to flag any synchronous blocking on async operations.
 
 ---
 
 ### 12. Logging Secrets
 **What it is**: Writing tokens, connection strings, or PII to log output.
 
-**What happens**: Secrets appear in log aggregation systems where they're visible to anyone with log access. Connection strings in Application Insights. Bearer tokens in CloudWatch.
+**What happens**: Secrets appear in log aggregation systems where they're visible to anyone with log access. Connection strings in Application Insights. Bearer tokens in CloudWatch. API keys in Datadog.
 
-**Prevention**: Structured logging with explicit field selection. Never log raw request/response bodies that might contain credentials. AI agents should be instructed to flag any `_logger.Log*` call that includes a variable named `token`, `password`, `connectionString`, or `secret`.
+**Prevention**: Structured logging with explicit field selection. Never log raw request/response bodies that might contain credentials. AI agents should be instructed to flag any logging call that includes a variable named `token`, `password`, `connectionString`, or `secret`.
 
 ---
 
 ### 13. Milestone/Pre-Release Dependencies
 **What it is**: Using milestone or pre-release versions of dependencies in production code.
 
-**What happens**: Breaking changes between milestone and GA. In one case, a Spring Framework milestone (M8) worked, but the GA release (7.0.2) removed a `MethodSecurityMetadataSource` class entirely — breaking authentication with no migration path.
+**What happens**: Breaking changes between milestone and GA. In one case, a Spring Framework milestone (M8) worked, but the GA release removed a critical authentication class entirely — breaking auth with no migration path. In another, a beta NuGet package introduced a breaking API change between RC and stable release.
 
-**Prevention**: Only GA releases in production. If a milestone feature is needed, pin the exact pre-release version and document the migration plan for when GA ships.
+**Prevention**: Only GA releases in production. If a pre-release feature is needed, pin the exact version and document the migration plan for when the stable release ships.
 
 ---
 
@@ -166,12 +167,12 @@ uses: actions/checkout@<full-commit-sha>
 
 **Prevention**: Standardize on `MethodName_Scenario_ExpectedBehavior` pattern. AI agents should follow this convention.
 
-### 16. Moq Expression Tree Gotcha
-**What it is**: Using `default` for optional parameters in Moq Setup/Verify expressions.
+### 16. Mock Framework Expression Gotchas
+**What it is**: Using language defaults or implicit values in mock framework setup expressions where the framework requires explicit matchers.
 
-**What happens**: Compiler error CS0854 — expression tree limitation. Confusing because the same code works outside of Moq lambdas.
+**What happens**: Unexpected compiler errors or runtime failures in test setup. The same code works outside of mock expressions but fails inside them due to framework-specific limitations (e.g., expression tree constraints in C# Moq, argument matcher scope in Java Mockito, or mock resolution in Python unittest.mock).
 
-**Prevention**: Always use `It.IsAny<T>()` instead of `default` in Moq expressions.
+**Prevention**: Always use the mock framework's explicit matchers. When in doubt, be explicit rather than relying on defaults.
 
 ---
 

@@ -21,7 +21,7 @@ Systematically scan for OWASP Top 10 vulnerabilities:
 **Input Validation Checks:**
 - All user inputs validated against expected formats and ranges
 - Message schemas validated before processing
-- HTTP request body validation with proper model binding
+- HTTP request body validation with proper request parsing and binding
 - File path inputs checked for path traversal
 - Query parameters validated for type and range
 

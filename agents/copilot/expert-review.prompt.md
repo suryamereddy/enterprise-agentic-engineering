@@ -36,7 +36,7 @@ Review the provided code with the highest level of scrutiny — minimum 5 rounds
 
 - Partition key specified in all database queries
 - No cross-partition scans
-- Async all the way (no `.Result` or `.Wait()`)
+- Async all the way (no blocking on async operations)
 - Bulk operations where batch size > 10
 - Hash-based delta detection to avoid redundant processing
 

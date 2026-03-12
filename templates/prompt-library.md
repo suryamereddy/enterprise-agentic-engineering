@@ -73,9 +73,9 @@ Before I modify [FILE_PATH], I need complete understanding:
 Implement [FEATURE_DESCRIPTION] following the established architecture:
 1. Read existing code patterns first
 2. Match the DI pattern already used in this project
-3. Create interfaces in the Contracts project
+3. Create interfaces/contracts in the appropriate module
 4. Implement in the appropriate layer
-5. Register in DI
+5. Register dependencies
 6. Write unit tests (80%+ coverage)
 7. Update configuration if needed
 
@@ -149,7 +149,7 @@ Pre-merge review for [BRANCH]:
 - [ ] All tests passing
 - [ ] No new warnings introduced
 - [ ] Constants used (no magic strings)
-- [ ] Async all the way (no .Result/.Wait())
+- [ ] Async all the way (no blocking on async operations)
 - [ ] DLQ for any new consumers
 - [ ] Partition key in all DB queries
 - [ ] Structured logging at boundaries
@@ -179,7 +179,7 @@ Required scenarios for each public method:
 - Error paths (dependency failures)
 - DLQ scenarios (for consumers)
 
-Use [MOCK_FRAMEWORK] for dependencies. Use explicit It.IsAny<T>() (never 'default' in expression trees).
+Use [MOCK_FRAMEWORK] for dependencies. Use explicit argument matchers (never literal defaults that cause framework errors).
 80%+ coverage minimum.
 ```
 

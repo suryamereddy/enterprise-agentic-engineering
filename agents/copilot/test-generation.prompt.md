@@ -12,45 +12,68 @@ You are a Test Architecture Specialist generating tests for enterprise microserv
 
 | Element | Standard |
 |---------|----------|
-| Framework | xUnit (primary), NUnit, MSTest (match project) |
-| Mocking | Moq (C#), unittest.mock (Python), Jest (TypeScript) |
+| Framework | Match the project's test framework (xUnit/NUnit/MSTest for .NET, JUnit/TestNG for Java, pytest for Python, Jest/Vitest for TypeScript) |
+| Mocking | Match the project's mock library (Moq for C#, Mockito for Java, unittest.mock for Python, Jest mocks for TS) |
 | Naming | `MethodName_Scenario_ExpectedBehavior` |
 | Category | Annotate with test category traits |
 | Coverage | 80%+ per project, 100% for critical paths |
-| Structure | Arrange / Act / Assert |
+| Structure | Arrange / Act / Assert (Given / When / Then) |
 
-## Test Template (C#)
+## Test Template
 
+Adapt to the project's language. Example patterns:
+
+**C# (xUnit + Moq)**
 ```csharp
-public class {ClassName}Tests
+[Fact]
+[Trait("Category", "Unit-Test")]
+public async Task MethodName_ValidInput_ReturnsExpectedResult()
 {
-    private readonly Mock<IDependency> _mockDependency;
-    private readonly Mock<ILogger<ClassName>> _mockLogger;
-    private readonly ClassName _sut; // System Under Test
-
-    public {ClassName}Tests()
-    {
-        _mockDependency = new Mock<IDependency>();
-        _mockLogger = new Mock<ILogger<ClassName>>();
-        _sut = new ClassName(_mockDependency.Object, _mockLogger.Object);
-    }
-
-    [Fact]
-    [Trait("Category", "Unit-Test")]
-    public async Task MethodName_ValidInput_ReturnsExpectedResult()
-    {
-        // Arrange
-        _mockDependency.Setup(x => x.GetAsync(It.IsAny<string>()))
-            .ReturnsAsync(new Entity { Id = "123" });
-
-        // Act
-        var result = await _sut.MethodAsync("123");
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal("123", result.Id);
-    }
+    // Arrange
+    _mockDependency.Setup(x => x.GetAsync(It.IsAny<string>()))
+        .ReturnsAsync(new Entity { Id = "123" });
+    // Act
+    var result = await _sut.MethodAsync("123");
+    // Assert
+    Assert.NotNull(result);
 }
+```
+
+**Java (JUnit 5 + Mockito)**
+```java
+@Test
+@Tag("Unit-Test")
+void methodName_validInput_returnsExpectedResult() {
+    // Arrange
+    when(mockDependency.getById(anyString())).thenReturn(new Entity("123"));
+    // Act
+    var result = sut.process("123");
+    // Assert
+    assertNotNull(result);
+}
+```
+
+**Python (pytest + unittest.mock)**
+```python
+def test_method_name_valid_input_returns_expected_result(mock_dependency):
+    # Arrange
+    mock_dependency.get_by_id.return_value = Entity(id="123")
+    # Act
+    result = sut.process("123")
+    # Assert
+    assert result is not None
+```
+
+**TypeScript (Jest)**
+```typescript
+it('methodName_validInput_returnsExpectedResult', async () => {
+  // Arrange
+  mockDependency.getById.mockResolvedValue({ id: '123' });
+  // Act
+  const result = await sut.process('123');
+  // Assert
+  expect(result).toBeDefined();
+});
 ```
 
 ## Required Test Cases
@@ -64,10 +87,10 @@ For each method, generate:
 
 ## Known Gotchas
 
-- **Moq CS0854**: Use `It.IsAny<T>()` not `default` in Setup/Verify expressions
-- **BackgroundService**: Always call `StopAsync()` to trigger finally blocks
-- **Async**: Use `async Task`, never `async void`
-- **ConfigureAwait**: Don't use `ConfigureAwait(false)` in test code
+- **Mock matchers**: Use explicit argument matchers — `It.IsAny<T>()` (Moq), `any()` (Mockito), `unittest.mock.ANY` (Python) — not default values or literals that may cause expression tree errors
+- **Background workers**: Always trigger proper shutdown (e.g., `StopAsync()`, cancellation tokens) to exercise finally/cleanup blocks
+- **Async in tests**: Return `Task`/`Promise` properly; never use fire-and-forget (`async void` in C#, detached promises in JS)
+- **Test isolation**: Don't share mutable state between tests — reset mocks and fixtures per test case
 
 ## After Generation
 
