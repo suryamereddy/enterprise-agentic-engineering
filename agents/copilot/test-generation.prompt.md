@@ -95,3 +95,76 @@ For each method, generate:
 ## After Generation
 
 Run tests and verify all pass before marking complete.
+
+---
+
+## E2E Comprehensive Test Patterns
+
+When generating E2E test suites for services (not unit tests), follow this battle-tested framework from 122 tests across 2 production services.
+
+### E2E Suite Structure
+
+```python
+# Standard E2E framework skeleton (adapt to any language)
+
+# --- Shared utilities ---
+results = {"passed": 0, "failed": 0, "skipped": 0}
+
+def run_test(name, test_fn):
+    """Wrapper: try/catch, timing, pass/fail tracking"""
+    try:
+        test_fn()
+        results["passed"] += 1
+    except Exception as e:
+        results["failed"] += 1
+        log_failure(name, e)
+
+def check(condition, message):
+    """Assertion with descriptive failure output"""
+    if not condition:
+        raise AssertionError(message)
+
+def preflight_checks():
+    """Verify env vars, auth, connectivity BEFORE any tests run"""
+    assert os.environ.get("API_BASE_URL"), "Set API_BASE_URL"
+    assert os.environ.get("AUTH_TOKEN") or obtain_token(), "Auth failed"
+
+def create_test_entity(**overrides):
+    """Factory: generate valid entities with all required fields"""
+    defaults = { ... }  # All required fields with valid values
+    return {**defaults, **overrides}
+
+def cleanup_and_restore(original_states):
+    """Restore any mutated data to original state (runs in finally block)"""
+    for entity_id, original in original_states.items():
+        restore(entity_id, original)
+```
+
+### The 12 Guardrail Sections
+
+Generate E2E tests organized into these sections:
+
+| Section | Tests | Purpose |
+|---------|-------|---------|
+| A | Happy-Path CRUD | Create, read, update, list, delete — basic API contract |
+| B | Delta Detection | Duplicate submissions produce no changes (Commandment #8) |
+| C | Gate/Filter — Negative | Invalid input is rejected with correct error codes |
+| D | Gate/Filter — Positive | Valid input passes through (test BOTH polarities!) |
+| E | Validation Failures | Malformed payloads return proper error responses |
+| F | Chain/Recursion Safety | Circular references, depth limits → graceful failure |
+| G | DLQ Verification | Failed processing → DLQ message with correct headers |
+| H | Observability/Alerting | Monitoring webhooks fire, alert payloads are correct |
+| I | Health Probes | Startup, liveness, readiness endpoints respond |
+| J | Concurrency/Circuit Breaker | Parallel requests, breaker trips under failure load |
+| K | Event Delivery Integrity | Events created, delivery tracked, audit trail complete |
+| L | Stress/Edge Cases | Oversized payloads, special characters, empty collections |
+| M | Cleanup/Restore | Restore mutated data to original state |
+
+### Critical Rules for E2E Generation
+
+1. **All credentials from environment variables** — never hardcoded
+2. **Preflight checks before any tests** — fail fast if environment isn't ready
+3. **Both gate polarities** — test what's blocked AND what's allowed
+4. **DLQ header verification** — check `originalTopic`, `errorMessage`, `failedAt`, `retryCount`
+5. **Event delivery verification** — events created with correct structure, delivery tracked, audit trail present
+6. **Cleanup in finally blocks** — restore state even on test failure

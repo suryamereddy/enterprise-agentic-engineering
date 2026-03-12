@@ -71,3 +71,27 @@ Every primary topic MUST have a corresponding DLQ topic. DLQ messages include he
 - `failedAt` — UTC timestamp
 - `retryCount` — number of retry attempts
 - `correlationId` — for tracing
+
+### DLQ Verification (E2E-Validated)
+
+DLQ design is not complete until it's testable end-to-end. Validated across 122 E2E tests in production services:
+
+**Structure verification**: Don't just test that messages land in the DLQ — verify the complete message structure:
+```
+# E2E DLQ verification pattern
+1. Trigger a processing failure (invalid payload, simulated downstream error)
+2. Poll the DLQ topic for the resulting message
+3. Verify payload matches original message (unchanged)
+4. Verify ALL required headers are present:
+   - originalTopic: matches source topic
+   - errorMessage: contains meaningful error description
+   - failedAt: valid ISO 8601 timestamp
+   - retryCount: numeric value
+   - correlationId: matches original message
+5. Verify alerting pipeline fires (webhook call, notification payload)
+```
+
+**Alerting as a testable system**: DLQ events should trigger alerts. Test the entire chain:
+DLQ message → alert trigger → webhook/notification → verify payload structure.
+
+**Chain/recursion failures route to DLQ**: When recursive entity resolution hits circular references or depth limits, the failure should route to DLQ with descriptive error metadata — never crash silently.

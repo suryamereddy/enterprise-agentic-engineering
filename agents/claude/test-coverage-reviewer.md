@@ -43,6 +43,23 @@ You are a Test Engineering Specialist reviewing test suites for completeness, qu
    - Database operations without integration validation
    - Message processing without end-to-end verification
 
+6. **E2E Guardrail Dimensions**
+   Verify the service has E2E coverage for each of these 12 dimensions:
+   - [ ] Happy-path CRUD (create, read, update, list, delete)
+   - [ ] Delta detection / idempotency (duplicate submissions produce no change)
+   - [ ] Gate/filter testing — BOTH polarities (blocks invalid AND allows valid)
+   - [ ] Validation failures (malformed input → correct error response)
+   - [ ] Chain/recursion safety (circular references → graceful failure, not crash)
+   - [ ] DLQ verification (failed messages → DLQ with correct structure and headers)
+   - [ ] Observability / alerting (monitoring pipeline fires on DLQ events)
+   - [ ] Health probes (startup, liveness, readiness endpoints respond correctly)
+   - [ ] Concurrency / circuit breaker (parallel load, breaker trips under failure)
+   - [ ] Stress / edge cases (oversized payloads, special characters, empty collections)
+   - [ ] Event delivery integrity (events created, structured correctly, delivered reliably, audit trail present)
+   - [ ] Cleanup / restore (mutated test data restored to original state)
+
+   For each uncovered dimension: flag the gap, assess risk, suggest a test skeleton.
+
 **Output Format:**
 
 | Module | Current Coverage | Target | Gap | Priority |

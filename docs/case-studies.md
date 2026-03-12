@@ -264,18 +264,117 @@ Key findings across rounds:
 
 ---
 
+## The Guardrail Suite
+**122 E2E tests · 4,921 lines of test code · The proof that every commandment holds under pressure**
+
+### Context
+Two production event-driven microservices — one processing HR employee data through a Kafka-to-Cosmos pipeline with TMS reconciliation (73 tests, 3,004 lines), the other processing financial events through an outbox pattern with multi-destination delivery (49 tests, 1,917 lines). Both had been built using the methodology's practices. The question: **do the guardrails actually hold?**
+
+The answer was to build comprehensive end-to-end test suites that don't just test code — they test every principle in the methodology against real infrastructure: live Kafka clusters, production-shaped Cosmos DB containers, real OAuth2 token flows, actual DLQ topics, and genuine health probe endpoints.
+
+### What Was Built
+
+**A reusable E2E test framework** replicated across both services with identical patterns:
+- Custom `run_test()` runner with colored output, `check()` assertion helper, and section-grouped reporting
+- CLI interface: `--env` (local/qa/cde), `--test` (single), `--section` (A-P), `--from-test`, `--list`
+- Preflight connectivity checks (Kafka broker, Cosmos DB, application health)
+- Dynamic configuration loaded from infrastructure-as-code files
+- Factory functions for test data (`make_test_worker()`, `make_invoice_created_event()`) with production-shaped payloads
+- Per-test cleanup to preserve real data integrity
+
+One command runs the full suite: `python3 e2e-comprehensive-tests.py --env qa` — **Commandment #6: One-Click or It Doesn't Count.**
+
+### The 12 Guardrail Dimensions
+
+Each suite is organized into sections that map directly to methodology principles:
+
+| Section | Tests | Methodology Principle Validated |
+|---------|-------|---------------------------------|
+| **Happy-Path & CRUD** | 12 | Baseline correctness — does the pipeline actually work? |
+| **Delta Detection & Idempotency** | 6 | **Commandment #8**: Hash Before You Process — ETag-based no-change verification, field-level delta triggers |
+| **Gate/Filter Exhaustive Testing** | 5 | Both positive AND negative: verify what's excluded AND what's NOT excluded |
+| **Validation Failures** | 14 | Every null/missing field combination → DLQ. No silent drops. |
+| **Chain/Recursion Safety** | 12 | Circular reference detection, self-referencing stops, 3-level depth, terminated entities |
+| **DLQ Verification** | 12 | **Commandment #7**: DLQ Everything — message structure, headers, original payload preservation |
+| **Observability/Alerting** | 5 | Webhook notification pipeline tested end-to-end, rate limiter verified |
+| **Health Probes** | 3 | Startup/liveness/readiness contracts verified across all Container App services |
+| **Concurrency & Circuit Breaker** | 9 | Rapid updates, ETag optimistic concurrency, shared resource leak detection |
+| **Stress & Edge Cases** | 10 | Malformed JSON, empty payloads, rapid-fire batches, large payloads |
+| **Event Delivery Integrity** | 5 | Event document types, delivery tracking, audit trail completeness, change processor pickup |
+| **Cleanup & Restore** | 4 | Test isolation — real data restored to known-good state after every test |
+
+### Key Testing Patterns Discovered
+
+**1. Gate Testing: Both Polarities**
+
+Filter logic isn't just about what's blocked — it's equally about what's *not* blocked. The employee pipeline tests that certain employee types (Driver) are correctly excluded, but then explicitly verifies that four related types (Contractor, Part-Time, Temp-to-Hire, Owner-Operator) are NOT excluded. Filter configurations are dynamically read from infrastructure-as-code YAML files, so the tests adapt when filter rules change.
+
+**2. DLQ Structure Verification**
+
+DLQ tests go beyond "did it land on the DLQ topic?" — they verify the DLQ message structure: ErrorCategory, SourceFlow, ErrorMessage, OriginalPayload, and Timestamp fields are all present. This ensures the DLQ provides forensic capability, not just a dead-end bin.
+
+**3. Chain Recursion Safety**
+
+The employee pipeline resolves management chains recursively (Employee → Supervisor → Supervisor's Supervisor → ...). The E2E suite tests: self-referencing supervisor stops, 2-level and 3-level chains resolve correctly, circular reference A↔B doesn't infinite loop, terminated supervisors are handled, and supervisors without email addresses don't crash the chain.
+
+**4. Alerting Pipeline as a Testable System**
+
+Most teams treat alerting as infrastructure. These suites test it as a feature: DLQ events auto-promote to High severity, which triggers webhook notifications. Tests verify the promotion fires, the rate limiter (SemaphoreSlim(2,2)) prevents flooding under rapid-fire DLQ events, and the application survives 5 concurrent DLQ→notification events without crashing.
+
+**5. Event Delivery Integrity**
+
+Event-driven systems produce side-effect events (outbox records, domain events, CDC entries) that must be reliably delivered downstream. E2E tests verify the full delivery chain: correct event documents are created with expected structure, delivery tracking doesn't exceed maximum retry/delivery counts, pending event queues stay within bounds, and the delivery processor (change feed, poller, CDC connector) picks up and delivers events. This pattern applies whether you're using a transactional outbox, database change streams, event sourcing, or any publish-alongside-business-operation architecture.
+
+### Security Practice Evolution
+
+One revealing pattern: the older service had credentials hardcoded directly in the test script, while the newer service used environment variables with clear error messages telling you what to export:
+
+```
+# Older pattern (hardcoded)
+KAFKA_PASSWORD = "actual-password-here"
+
+# Evolved pattern (environment variables)
+KAFKA_API_KEY = os.environ.get("FINANCE_BRIDGE_KAFKA_API_KEY", "")
+if not KAFKA_API_KEY:
+    print("  [ERROR] FINANCE_BRIDGE_KAFKA_API_KEY not set")
+    print("  Export: export FINANCE_BRIDGE_KAFKA_API_KEY='...'")
+    sys.exit(1)
+```
+
+This evolution — visible across the two test suites — demonstrates how practices mature through iteration. The newer service learned from the older one.
+
+### Outcome
+
+| Metric | Employee Pipeline | Financial Pipeline | Total |
+|--------|------------------|--------------------|-------|
+| Tests | 73 | 49 | **122** |
+| Lines of test code | 3,004 | 1,917 | **4,921** |
+| Test sections | 16 (A-P) | 10 (A-J) | 26 |
+| Guardrail dimensions | 12 | 10 | 12 unique |
+| Methodology principles validated | 8 of 10 Commandments | 7 of 10 Commandments | **9 of 10** |
+
+The only Commandment not directly tested by E2E: **#10 Pin Your Dependencies** (a CI/CD concern, not runtime).
+
+### Lesson
+**E2E tests are not just quality assurance — they're methodology enforcement.** Every commandment, every anti-pattern, every guardrail in this framework can be expressed as a testable assertion against a running system. When your E2E suite validates DLQ message structure, delta detection accuracy, chain recursion safety, and circuit breaker survival — you're not testing code. You're testing that your engineering principles hold under pressure.
+
+The test suites also revealed that **practices evolve across projects**. Security patterns, error handling, and configuration management all improved from the first service to the second. E2E suites make that evolution visible and measurable.
+
+---
+
 ## Summary of Evidence
 
-| Case Study | Messages | Key Methodology | Production Impact |
+| Case Study | Messages/Scale | Key Methodology | Production Impact |
 |------------|----------|-----------------|-------------------|
-| The Colossus | 342 | Deep Onboarding | Created the 8-doc standard |
-| The Humbling | 63 | Revert-Prove-Rebuild | Prevented all subsequent conversion bugs |
-| The Middleware Killer | 229 | Deep Onboard → Build-Review-Iterate | Eliminated middleware latency + failure mode |
-| The Backlog Slayer | 118 | Data architecture + Delta detection | 78% reduction, real-time processing |
-| The Overnight Build | 216 | Full methodology stack | Zero-to-production SaaS in 24 hours |
-| The Pipeline Fortress | 166 | Build-Review-Iterate (5 rounds) | 45+ issues caught before human review |
+| The Colossus | 342 messages | Deep Onboarding | Created the 8-doc standard |
+| The Humbling | 63 messages | Revert-Prove-Rebuild | Prevented all subsequent conversion bugs |
+| The Middleware Killer | 229 messages | Deep Onboard → Build-Review-Iterate | Eliminated middleware latency + failure mode |
+| The Backlog Slayer | 118 messages | Data architecture + Delta detection | 78% reduction, real-time processing |
+| The Overnight Build | 216 messages | Full methodology stack | Zero-to-production SaaS in 24 hours |
+| The Pipeline Fortress | 166 messages | Build-Review-Iterate (5 rounds) | 45+ issues caught before human review |
+| The Guardrail Suite | 122 tests, 4,921 lines | All 10 Commandments | Validates 9 of 10 Commandments hold under pressure |
 
-**Total across case studies: 1,132 AI messages producing 6 production-grade systems.**
+**Total across case studies: 1,132 AI messages producing 6 production-grade systems, plus 122 E2E tests proving the guardrails work.**
 
 ---
 

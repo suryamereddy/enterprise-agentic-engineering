@@ -167,6 +167,7 @@ Real-world enterprise applications, anonymized but detailed. These are not demos
 | [The Backlog Slayer](docs/case-studies.md#the-backlog-slayer) | 118 messages | 850K record backlog → hash-based delta detection → 78% data reduction |
 | [The Overnight Build](docs/case-studies.md#the-overnight-build) | 216 messages | Complete multi-tenant SaaS application built from zero in one session |
 | [The Pipeline Fortress](docs/case-studies.md#the-pipeline-fortress) | 166 messages | CI/CD with rollback capability, 5 review rounds catching 45+ issues |
+| [The Guardrail Suite](docs/case-studies.md#the-guardrail-suite) | 122 tests, 4,921 lines | E2E-validated proof that 9 of 10 Commandments hold under pressure |
 
 → [Read All Case Studies](docs/case-studies.md)
 

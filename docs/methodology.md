@@ -306,6 +306,80 @@ DLQ topics provide:
 - **Forensic analysis**: Error patterns reveal systemic issues (e.g., schema mismatches, upstream data quality)
 - **Alerting integration**: DLQ message rates trigger automated alerts
 
+### E2E Validation: Proving DLQ Works Under Pressure
+
+The DLQ principle isn't just a design rule — it's verified through dedicated E2E test sections that validate the entire failure pipeline:
+
+| Test Dimension | What It Proves |
+|---------------|---------------|
+| **DLQ Structure Verification** | Messages land in the DLQ topic with correct payload and all required headers (`originalTopic`, `errorMessage`, `failedAt`, `retryCount`, `correlationId`) |
+| **DLQ Header Completeness** | Every metadata field required for forensic analysis is present — not just the payload |
+| **Alerting Pipeline** | DLQ events trigger downstream alerting (webhook calls, notification payloads) — the monitoring is itself a testable system |
+| **Chain/Recursion Safety** | Recursive entity resolution with circular references fails gracefully into DLQ instead of infinite loops |
+
+These aren't theoretical checks. Across 2 production services (122 E2E tests, 4,921 lines), DLQ verification consumed 15-20% of all test sections — making it the single most heavily tested dimension. ([Full case study](case-studies.md#the-guardrail-suite))
+
+---
+
+## 7. E2E Comprehensive Testing
+
+### The Principle
+
+> *"If your commandments aren't tested end-to-end, they're suggestions."*
+
+Unit tests verify components. Integration tests verify connections. E2E comprehensive tests verify that your engineering principles actually hold under production-like conditions. They are the final proof that DLQ routing works, delta detection fires, health probes respond, and circuit breakers trip.
+
+### The 12 Guardrail Dimensions
+
+A mature E2E suite covers these dimensions — each mapped to a methodology principle:
+
+| # | Dimension | Validates |
+|---|-----------|-----------|
+| 1 | Happy-Path CRUD | Basic API contract (create, read, update, list, delete) |
+| 2 | Delta Detection / Idempotency | Commandment #8: Hash Before You Process |
+| 3 | Gate/Filter Testing (both polarities) | Filters block what they should AND allow what they shouldn't block |
+| 4 | Validation Failures | Bad input rejected with correct error codes |
+| 5 | Chain/Recursion Safety | Circular references, depth limits handled gracefully |
+| 6 | DLQ Verification | Commandment #7: DLQ Everything (structure + headers + alerting) |
+| 7 | Observability / Alerting | Monitoring pipeline is itself testable |
+| 8 | Health Probes | Startup, liveness, readiness endpoints respond correctly |
+| 9 | Concurrency / Circuit Breaker | Commandment #4: Never Double-Retry; breakers trip correctly |
+| 10 | Stress / Edge Cases | Oversized payloads, special characters, empty collections |
+| 11 | Event Delivery Integrity | Events created, structured correctly, delivered reliably, and auditable |
+| 12 | Cleanup / Restore | Tests that mutate real data restore original state afterward |
+
+### The Framework Pattern
+
+E2E suites follow a standardized structure:
+
+```
+# Shared utilities (language-agnostic pattern)
+run_test(name, function)       # Wrapper: try/catch, timing, pass/fail tracking
+check(condition, message)      # Assertion with descriptive failure output
+preflight_checks()             # Verify environment, auth, connectivity before any tests
+factory_functions()            # Generate valid test entities with all required fields
+cleanup_and_restore()          # Restore any mutated production data to original state
+
+# Execution
+run_all_sections()             # Sections A-P, each a guardrail dimension
+print_summary()                # Pass/fail/skip counts, total time
+```
+
+### Why Both Polarities Matter
+
+Gate and filter tests must validate **both directions** — what's blocked AND what's allowed through:
+
+```
+# ❌ One-polarity testing (incomplete)
+test_gate_blocks_invalid_input()     # Only tests rejection
+
+# ✅ Both-polarity testing (complete)
+test_gate_blocks_invalid_input()     # Confirms rejection
+test_gate_allows_valid_input()       # Confirms acceptance
+```
+
+Testing only one polarity creates a false sense of security. A filter that rejects everything passes one-polarity tests perfectly.
+
 ---
 
 ## The 10 Commandments

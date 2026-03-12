@@ -195,6 +195,52 @@ Analyze test coverage for [PROJECT]:
 6. Generate skeleton tests for the top 10 gaps
 ```
 
+### E2E Comprehensive Test Suite
+
+```
+Generate an E2E comprehensive test suite for [SERVICE_NAME]:
+
+Structure:
+- Preflight checks (verify env vars, auth, connectivity before any tests)
+- Factory functions for test entity creation (all required fields, valid defaults)
+- Shared utilities: run_test(name, fn), check(condition, message)
+
+Sections (the 12 Guardrail Dimensions):
+A. Happy-Path CRUD (create, read, update, list, delete)
+B. Delta Detection / Idempotency (duplicate submissions → no change)
+C. Gate/Filter Testing — Negative (invalid input blocked)
+D. Gate/Filter Testing — Positive (valid input allowed through)
+E. Validation Failures (malformed payloads → correct error codes)
+F. Chain/Recursion Safety (circular references → graceful failure)
+G. DLQ Verification (failed processing → DLQ with structure + headers)
+H. Observability / Alerting (DLQ events trigger monitoring pipeline)
+I. Health Probes (startup, liveness, readiness endpoints)
+J. Concurrency / Circuit Breaker (parallel requests, breaker behavior)
+K. Event Delivery Integrity (events created, delivery tracked, audit trail complete)
+L. Stress / Edge Cases (oversized payloads, special chars, empty collections)
+M. Cleanup / Restore (restore mutated data to original state)
+
+Rules:
+- All credentials from environment variables (never hardcoded)
+- Test both gate polarities (block AND allow)
+- Verify DLQ headers: originalTopic, errorMessage, failedAt, retryCount, correlationId
+- Cleanup in finally blocks (runs even on failure)
+- Print summary: passed/failed/skipped counts, total execution time
+```
+
+### E2E Guardrail Audit
+
+```
+Audit the existing E2E tests for [SERVICE_NAME] against the 12 Guardrail Dimensions:
+
+For each dimension, report:
+- [ ] Covered / Not covered
+- Number of tests
+- Any gaps (e.g., only one gate polarity, DLQ payload checked but not headers)
+
+Flag the top 3 highest-risk gaps and generate skeleton tests for each.
+```
+
 ---
 
 ## 5. Debug & Investigation Prompts

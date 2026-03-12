@@ -125,6 +125,32 @@ Adapt to your language — `Constants.cs`, `Constants.java`, `constants.py`, `co
 | Naming | `MethodName_Scenario_ExpectedBehavior` |
 | Coverage | 80%+ per project |
 
+### E2E Comprehensive Testing
+
+For services with external integrations, message consumers, or multi-layer flows, maintain E2E test suites that validate the 12 guardrail dimensions:
+
+| Dimension | What It Validates |
+|-----------|------------------|
+| Happy-Path CRUD | Basic API contract works end-to-end |
+| Delta Detection | Duplicate submissions produce no changes (Commandment #8) |
+| Gate/Filter (both polarities) | Filters block invalid AND allow valid — test both directions |
+| Validation Failures | Bad input returns correct error codes |
+| Chain/Recursion Safety | Circular references → graceful failure, not crash |
+| DLQ Verification | Failed processing → DLQ with correct structure and headers |
+| Observability/Alerting | Monitoring pipeline fires correctly |
+| Health Probes | Startup, liveness, readiness endpoints respond |
+| Concurrency/Circuit Breaker | Parallel load handled, breaker trips correctly |
+| Stress/Edge Cases | Oversized payloads, special chars, empty collections |
+| Event Delivery Integrity | Events created, delivered, and auditable end-to-end |
+| Cleanup/Restore | Mutated test data restored to original state |
+
+**E2E Rules:**
+- All credentials from environment variables — never hardcoded in test scripts
+- Preflight checks before any tests (verify environment, auth, connectivity)
+- Both gate polarities tested — block AND allow
+- DLQ headers verified (not just message presence)
+- Cleanup runs in `finally` blocks — even on test failure
+
 ---
 
 ## CI/CD Rules

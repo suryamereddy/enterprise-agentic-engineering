@@ -197,8 +197,18 @@ Before posting a single piece of content:
 |-----|----------|----------------|
 | Mon | LinkedIn | "'DLQ Everything' — the engineering principle that applies far beyond message queues. Every system needs a graceful failure path." |
 | Tue | LinkedIn | How dead letter queues saved production: specific story of a failure that was caught and recovered automatically. |
+| Wed | LinkedIn | "We wrote 122 E2E tests across 2 production services. 15-20% of them just test DLQ behavior. Here's why DLQ verification is the most heavily tested dimension in our guardrail suites." |
 | Thu | LinkedIn | "The 7th Commandment: Every message consumer needs a dead letter queue. No exceptions. Here's a horror story about what happens without one." |
 | Fri | X | Thread: "7 engineering principles I learned from building message-driven systems with AI that apply to ALL software..." |
+
+#### Week 6.5: The Guardrail Suite (E2E Testing as Proof)
+| Day | Platform | Content Summary |
+|-----|----------|----------------|
+| Mon | LinkedIn | "Your engineering principles aren't real until they're tested. We built 4,921 lines of E2E tests that prove 9 of 10 Commandments hold under pressure." |
+| Mon | X | "Unit tests verify components. E2E comprehensive tests verify your engineering principles actually work. Here are the 12 guardrail dimensions every service should test." |
+| Tue | LinkedIn | Deep dive: "The 12 Guardrail Dimensions — a checklist for E2E test coverage that goes beyond happy-path CRUD." Include the table mapping dimensions to commandments. |
+| Thu | LinkedIn | "One-polarity gate testing: the invisible anti-pattern. If you only test that filters block bad input, you'll never know they're also blocking good input." |
+| Fri | LinkedIn | "Test your monitoring pipeline, not just your code. DLQ events → alert triggers → webhook payloads. Observability is a testable system." |
 
 #### Week 7: Team Adoption & Scaling
 | Day | Platform | Content Summary |
@@ -296,6 +306,8 @@ Every major piece of content should live in at least 4 formats:
 6. "3 Eras of AI Adoption" — visual journey with data
 7. "The AI Agent Roster" — 18 agents, what each does, when to use
 8. "Deep Onboarding in 8 Documents" — the 8-document suite visualized
+9. "The 12 Guardrail Dimensions" — one per slide with what it validates and which commandment it proves
+10. "E2E Testing Evolution" — hardcoded creds → env vars → secret stores, showing security maturity in test scripts
 
 ---
 

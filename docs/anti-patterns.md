@@ -176,6 +176,80 @@ uses: actions/checkout@<full-commit-sha>
 
 ---
 
+## E2E Testing Anti-Patterns
+
+*Discovered through building 122 E2E tests across 2 production services. These anti-patterns are invisible in unit tests and only surface when validating entire system flows.*
+
+### 17. One-Polarity Gate Testing
+**What it is**: Testing that filters *block* invalid input, but never testing that they *allow* valid input through.
+
+**What happens**: A filter that rejects everything passes all your tests perfectly. You deploy with confidence. Valid production traffic gets blocked. The filter works exactly as tested — the test was incomplete.
+
+**Real example**: A gate/filter E2E section initially only tested rejection scenarios. Adding the positive polarity ("valid input passes through") revealed that an overly aggressive validation regex was blocking legitimate entries with special characters.
+
+**Prevention**: Every gate/filter test needs both polarities:
+```
+# Both polarities required
+test_gate_blocks_invalid_input()     # Confirms rejection
+test_gate_allows_valid_input()       # Confirms acceptance
+```
+
+If you can't write the positive test, you don't fully understand the filter's contract.
+
+---
+
+### 18. No Chain/Recursion Safety Testing
+**What it is**: Testing entity resolution or hierarchical traversal without testing circular reference handling or depth limits.
+
+**What happens**: An entity references itself (or creates a cycle: A → B → C → A). Without depth limits, the system enters infinite recursion — stack overflow in synchronous code, memory exhaustion in async code. In production, this manifests as sudden service crashes with no meaningful error message.
+
+**Real example**: A worker hierarchy resolution (employee → supervisor → supervisor's supervisor) had no depth guard. E2E tests with circular references validated that the system returns a graceful error at configurable depth limits instead of crashing.
+
+**Prevention**: Any recursive or hierarchical resolution must have:
+1. A maximum depth parameter
+2. A visited-set to detect cycles
+3. An E2E test with intentionally circular data
+4. Graceful failure (DLQ or error response), never a crash
+
+---
+
+### 19. Hardcoded Credentials in Test Scripts
+**What it is**: Embedding API keys, tokens, or connection strings directly in test code instead of reading from environment variables or secret stores.
+
+**What happens**: Credentials committed to version control. Test scripts that work on one machine but fail everywhere else. Credentials that can't be rotated without updating code. In the worst case, production secrets in a public repo.
+
+**Real example**: An earlier E2E test suite hardcoded OAuth client credentials directly in the script. The evolved version reads from environment variables with descriptive error messages when they're missing:
+```
+# ❌ Hardcoded (earlier pattern)
+CLIENT_ID = "abc123-actual-client-id"
+CLIENT_SECRET = "xyz789-actual-secret"
+
+# ✅ Environment-driven (evolved pattern)
+CLIENT_ID = os.environ.get("TEST_CLIENT_ID")
+if not CLIENT_ID:
+    print("ERROR: Set TEST_CLIENT_ID environment variable")
+    sys.exit(1)
+```
+
+**Prevention**: All test credentials from environment variables or secret stores. Fail fast with helpful error messages when missing. Never commit actual credentials — even "test" ones.
+
+---
+
+### 20. No Cleanup/Restore in E2E Tests
+**What it is**: E2E tests that create or mutate real data (in dev/QA environments) without restoring original state afterward.
+
+**What happens**: Test runs corrupt shared environments. Data from previous test runs interferes with subsequent runs. "It worked yesterday" becomes a frequent complaint. QA teams lose trust in their environments.
+
+**Real example**: E2E comprehensive test suites include explicit cleanup/restore sections that run after all tests complete — restoring any entities modified during testing to their original state, regardless of whether tests passed or failed.
+
+**Prevention**: Every E2E suite needs a cleanup protocol:
+1. Capture original state before mutation
+2. Run tests
+3. Restore original state in a `finally` block (runs even on failure)
+4. Verify restoration succeeded
+
+---
+
 ## The Pattern Behind the Patterns
 
 Every anti-pattern here shares a root cause: **insufficient context before action.**
@@ -184,6 +258,9 @@ Every anti-pattern here shares a root cause: **insufficient context before actio
 - Double-Retry → no knowledge of library behavior
 - Magic Strings → no centralized source of truth
 - Cross-Partition Queries → no understanding of data architecture
+- One-Polarity Gate Testing → incomplete understanding of filter contracts
+- No Chain Safety → no modeling of recursive data relationships
+- No Cleanup/Restore → no consideration of shared environment state
 
 The methodology's answer is always the same: **understand first, then act.** Deep Onboarding exists because every other anti-pattern becomes less likely when you start with comprehensive understanding.
 
