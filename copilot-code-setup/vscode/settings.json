@@ -1,0 +1,20 @@
+{
+  "// copilot-dev-kit": "VS Code Copilot settings. Merge into your repo's .vscode/settings.json. codeGeneration/testGeneration .instructions settings are DEPRECATED (VS Code 1.102+) — use .github/instructions/*.instructions.md instead. The three below are still active.",
+
+  "chat.promptFiles": true,
+  "chat.promptFilesLocations": { ".github/prompts": true },
+  "chat.instructionsFilesLocations": { ".github/instructions": true },
+
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    { "text": "Conventional-commit style. Subject ≤72 chars, imperative mood. Body explains WHY, not just what. Never include secrets or tokens." }
+  ],
+
+  "github.copilot.chat.reviewSelection.instructions": [
+    { "file": ".github/copilot-instructions.md" },
+    { "text": "Review adversarially: try to BREAK the code — edge cases, race conditions, failure branches, contract drift, unvalidated input, hardcoded secrets. Order findings by severity. Do not fabricate; flag what you could not verify." }
+  ],
+
+  "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [
+    { "text": "Summarize WHAT changed and WHY. List how it was verified (real-data/spec proof, tests, failure-branch coverage). Call out any evidence still outstanding. No secrets." }
+  ]
+}

@@ -1,0 +1,59 @@
+name: Pre-ship check
+
+# CI enforcement of the "done = evidence" gate + secret scan — defense-in-depth for
+# contributors who didn't install the local pre-commit hook (incl. Copilot coding agent PRs).
+# Make this a REQUIRED status check via branch protection / a ruleset to gate merges.
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scan changed content against .github/secret-patterns.txt
+        shell: bash
+        run: |
+          PATTERNS=".github/secret-patterns.txt"
+          [ -f "$PATTERNS" ] || { echo "no patterns file; skipping"; exit 0; }
+          BASE="${{ github.event.pull_request.base.sha }}"
+          BEFORE="${{ github.event.before }}"
+          if [ -n "$BASE" ]; then
+            RANGE="$BASE...${{ github.sha }}"
+          elif [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ]; then
+            RANGE="$BEFORE...${{ github.sha }}"
+          else
+            # new branch / first push (before is all-zeros): scan just the tip commit
+            RANGE="${{ github.sha }}~1...${{ github.sha }}"
+          fi
+          ADDED="$(git diff --no-color -U0 "$RANGE" 2>/dev/null | grep '^+' | grep -v '^+++' | grep -v 'pragma: allowlist secret' || true)"
+          [ -z "$ADDED" ] && { echo "no added lines"; exit 0; }
+          FOUND=0
+          while IFS= read -r pat; do
+            case "$pat" in ''|\#*) continue ;; esac
+            if printf '%s' "$ADDED" | grep -E -i -q -- "$pat"; then
+              echo "::error::Added content matches a secret pattern: $(printf '%s' "$pat" | cut -c1-40)"
+              FOUND=1
+            fi
+          done < "$PATTERNS"
+          [ "$FOUND" -eq 0 ] || { echo "Secret pattern detected — failing."; exit 1; }
+          echo "✓ no secret patterns in the diff"
+
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # --- Replace with YOUR build/test commands (the "evidence" half of the gate) ---
+      # - run: npm ci && npm test -- --coverage
+      # - run: dotnet test --collect:"XPlat Code Coverage"
+      # - run: pytest --cov --cov-fail-under=90
+      - name: Placeholder
+        run: echo "Wire your build/test here. Enforce ≥90% coverage on new code; fail on failure-branch gaps."

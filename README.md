@@ -193,11 +193,17 @@ enterprise-agentic-engineering/
 │   ├── evolution.md                   ← The 20-month journey with data
 │   └── anti-patterns.md               ← What fails and why (with evidence)
 │
-├── claude-code-setup/                 ← RUNNABLE harness — `bash claude-code-setup/install.sh`
+├── claude-code-setup/                 ← RUNNABLE harness for CLAUDE CODE — `bash claude-code-setup/install.sh`
 │   ├── install.sh                     ← One-command install into ~/.claude/ (backs up first)
 │   ├── CUSTOMIZE.md                   ← Adapt hooks/secret-patterns/reviewers to your stack
 │   ├── claude/                        ← CLAUDE.md, settings.json, hooks/, git-hooks/, skills/
 │   └── claude-memory-template/        ← Memory + status/ discipline scaffold
+│
+├── copilot-code-setup/                ← RUNNABLE harness for GITHUB COPILOT — `bash copilot-code-setup/install.sh <repo>`
+│   ├── install.sh                     ← Scaffolds .github/, .vscode/, .git/hooks into a target repo
+│   ├── github/                        ← copilot-instructions.md, prompts/, agents/, instructions/, workflow, secret-patterns
+│   ├── vscode/                        ← commit/review/PR instruction wiring
+│   └── docs/claude-vs-copilot.md      ← The honest Claude→Copilot mapping (what does/doesn't translate)
 │
 ├── agents/
 │   ├── copilot/                       ← GitHub Copilot prompt agents (.prompt.md)
@@ -239,12 +245,13 @@ enterprise-agentic-engineering/
 ### For Individual Engineers
 
 1. **Read the [Manifesto](MANIFESTO.md)** — Understand why structured AI engineering matters
-2. **Install the operational harness** (Claude Code) — one command, backs up your existing config first:
+2. **Install the operational harness** — one command, backs up your existing config first:
    ```bash
-   bash claude-code-setup/install.sh
+   bash claude-code-setup/install.sh              # Claude Code  → ~/.claude/  (then restart, /agents)
+   bash copilot-code-setup/install.sh /path/to/repo   # GitHub Copilot → the repo's .github/
    ```
-   Then **restart Claude Code** and run `/agents`. This gives you the principles, hooks, the scaled review gate, the secret-commit blocker, and the reviewer agents. See [The Operational Harness](docs/operational-harness.md).
-3. **Copy `templates/copilot-instructions.md`** into your project's `.github/` directory and customize it for your stack
+   This gives you the principles, the scaled review gate, the secret-commit blocker, and the reviewer agents — enforced via hooks (Claude) or git/CI/push-protection (Copilot). See [The Operational Harness](docs/operational-harness.md) and the [Claude→Copilot mapping](copilot-code-setup/docs/claude-vs-copilot.md).
+3. **Customize** `.github/copilot-instructions.md` (Copilot) or the installed `CLAUDE.md` (Claude) for your stack
 4. **Start with Deep Onboarding** — Run the [deep-onboarding prompt](agents/copilot/deep-onboarding.prompt.md) on your primary repo
 5. **Practice Build-Review-Iterate** on your next feature, and run `/done-check` before every commit/PR
 

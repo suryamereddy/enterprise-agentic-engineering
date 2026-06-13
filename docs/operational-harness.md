@@ -4,7 +4,11 @@
 
 > The [methodology](methodology.md) and the [10 Commandments](../README.md) describe *what* disciplined AI engineering looks like. This document covers *how it's enforced* — the deterministic harness that makes the discipline automatic instead of remembered. These are the practices that emerged **after** the original 20-month dataset (Apr–Jun 2026), once the methodology was stable enough to mechanize.
 >
-> Everything here ships, runnable, in [`claude-code-setup/`](../claude-code-setup/). One command installs it: `bash claude-code-setup/install.sh`.
+> Everything here ships, runnable, for **both editors**:
+> - **Claude Code** → [`claude-code-setup/`](../claude-code-setup/) · `bash claude-code-setup/install.sh` (installs into `~/.claude/`)
+> - **GitHub Copilot** → [`copilot-code-setup/`](../copilot-code-setup/) · `bash copilot-code-setup/install.sh <repo>` (scaffolds the repo's `.github/`)
+>
+> Copilot has no hooks/subagents/auto-memory, so the same principles are enforced differently (git pre-commit + GitHub Actions + push protection instead of lifecycle hooks). The honest, doc-verified translation of every concept is in [`copilot-code-setup/docs/claude-vs-copilot.md`](../copilot-code-setup/docs/claude-vs-copilot.md).
 
 ---
 
