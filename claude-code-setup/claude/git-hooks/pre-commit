@@ -1,0 +1,39 @@
+#!/bin/bash
+# GLOBAL git pre-commit secret scanner — blocks committing any of your known
+# secrets or generic secret shapes into ANY repo, even commits made outside Claude.
+#
+# Installed by install.sh, which also runs:
+#   git config --global core.hooksPath ~/.claude/git-hooks
+#
+# False-positive escape valve (do NOT use --no-verify): append the inline marker
+#   pragma: allowlist secret
+# to the offending line (only on a CONFIRMED non-secret placeholder/example/fixture).
+
+PATTERNS="$HOME/.claude/git-hooks/secret-patterns.txt"
+[ -f "$PATTERNS" ] || exit 0   # no patterns file -> don't block
+
+# Scan the staged diff (added lines only), minus lines marked as an allowlisted FP
+STAGED="$(git diff --cached --no-color -U0 | grep '^+' | grep -v '^+++' | grep -v 'pragma: allowlist secret')"
+[ -z "$STAGED" ] && exit 0
+
+HITS=""
+while IFS= read -r pat; do
+  case "$pat" in ''|\#*) continue ;; esac
+  if printf '%s' "$STAGED" | grep -E -i -q -- "$pat"; then
+    files="$(git diff --cached --name-only -G "$pat" 2>/dev/null | tr '\n' ' ')"
+    HITS="$HITS\n  • pattern '$(printf '%s' "$pat" | cut -c1-24)…' in: ${files:-staged content}"
+  fi
+done < "$PATTERNS"
+
+if [ -n "$HITS" ]; then
+  echo "" >&2
+  echo "🚫 COMMIT BLOCKED — staged content matches a secret pattern:" >&2
+  printf '%b\n' "$HITS" >&2
+  echo "" >&2
+  echo "Remove the credential (use a secret manager or env var), re-stage, and commit again." >&2
+  echo "Confirmed false positive? add 'pragma: allowlist secret' to that line (never --no-verify)." >&2
+  echo "Patterns live in ~/.claude/git-hooks/secret-patterns.txt" >&2
+  echo "" >&2
+  exit 1
+fi
+exit 0

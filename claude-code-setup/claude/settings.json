@@ -1,0 +1,65 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(*--force-with-lease*)",
+      "Bash(*PRODUCTION* DELETE *)",
+      "Bash(*PRODUCTION* DROP *)",
+      "Bash(*PRODUCTION* UPDATE *)",
+      "Bash(*PRODUCTION* TRUNCATE *)",
+      "Bash(*prod* DELETE *)",
+      "Bash(*prod* DROP *)",
+      "Bash(*prod* UPDATE *)",
+      "Bash(*prod* TRUNCATE *)"
+    ],
+    "ask": [
+      "Bash(psql:*)",
+      "Bash(mysql:*)",
+      "Bash(mongo:*)",
+      "Bash(mongosh:*)",
+      "Bash(redis-cli:*)",
+      "Bash(sqlite3:*)",
+      "Bash(*DELETE *)",
+      "Bash(*INSERT *)",
+      "Bash(*UPDATE *)",
+      "Bash(*DROP *)",
+      "Bash(*TRUNCATE *)",
+      "Bash(*ALTER *)"
+    ],
+    "defaultMode": "default"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "~/.claude/hooks/inject-date.sh" },
+          { "type": "command", "command": "~/.claude/hooks/session-status-staleness.sh" }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "~/.claude/hooks/guard-merged-pr-push.sh" },
+          { "type": "command", "command": "~/.claude/hooks/guard-secret-commit.sh" },
+          { "type": "command", "command": "~/.claude/hooks/remind-review-before-pr.sh" }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          { "type": "command", "command": "~/.claude/hooks/redirect-agentplans-path.sh" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "~/.claude/hooks/stop-dotnet-format.sh" }
+        ]
+      }
+    ]
+  }
+}

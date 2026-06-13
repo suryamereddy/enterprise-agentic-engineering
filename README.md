@@ -152,6 +152,9 @@ Forged from 72 sessions and multiple production incidents. Print it. Pin it. Liv
 | 8 | **Hash Before You Process** | SHA-256 delta detection to avoid redundant work |
 | 9 | **Dry-Run Before Live** | Data migration tools must have `--dry-run` mode |
 | 10 | **Pin Your Dependencies** | SHA-pinned actions, version-locked packages, no floating refs |
+| 11 | **Never Commit a Secret** | Secrets reach prod via a secret manager, never source — enforced by a 3-layer commit blocker |
+
+> **Note on Commandment 3 (refined):** "5+ rounds always" was right early on but wasteful on trivial diffs and insufficient on contract changes. The review is now a **gate at the commit/PR boundary**, with reviewer count **scaled to the change** (0–1 for trivial, up to 3 for prod/contract). See [The Operational Harness](docs/operational-harness.md).
 
 ---
 
@@ -184,10 +187,17 @@ enterprise-agentic-engineering/
 │
 ├── docs/
 │   ├── methodology.md                 ← The complete 6-practice framework
+│   ├── operational-harness.md         ← The runnable enforcement layer (hooks/skills/gates)
 │   ├── case-studies.md                ← Anonymized production case studies
 │   ├── team-onboarding.md             ← 6-week organizational rollout plan
 │   ├── evolution.md                   ← The 20-month journey with data
 │   └── anti-patterns.md               ← What fails and why (with evidence)
+│
+├── claude-code-setup/                 ← RUNNABLE harness — `bash claude-code-setup/install.sh`
+│   ├── install.sh                     ← One-command install into ~/.claude/ (backs up first)
+│   ├── CUSTOMIZE.md                   ← Adapt hooks/secret-patterns/reviewers to your stack
+│   ├── claude/                        ← CLAUDE.md, settings.json, hooks/, git-hooks/, skills/
+│   └── claude-memory-template/        ← Memory + status/ discipline scaffold
 │
 ├── agents/
 │   ├── copilot/                       ← GitHub Copilot prompt agents (.prompt.md)
@@ -209,11 +219,14 @@ enterprise-agentic-engineering/
 │       ├── performance-reviewer.md
 │       ├── infrastructure-builder.md
 │       ├── pipeline-engineer.md
-│       └── test-coverage-reviewer.md
+│       ├── test-coverage-reviewer.md
+│       ├── adversarial-reviewer.md    ← Tries to BREAK the code, not validate it
+│       └── prod-data-verifier.md      ← Diffs output vs. real data (teeth on Commandment 2)
 │
 ├── templates/
 │   ├── copilot-instructions.md        ← Customizable master AI instruction file
-│   └── prompt-library.md              ← All prompt templates in one document
+│   ├── prompt-library.md              ← All prompt templates in one document
+│   └── stack-reviewer.agent.md        ← Copy + encode YOUR stack's invariants
 │
 └── .github/
     └── copilot-instructions.md        ← This repo's own AI instructions
@@ -226,10 +239,14 @@ enterprise-agentic-engineering/
 ### For Individual Engineers
 
 1. **Read the [Manifesto](MANIFESTO.md)** — Understand why structured AI engineering matters
-2. **Copy `templates/copilot-instructions.md`** into your project's `.github/` directory
-3. **Customize it** for your tech stack and architecture
+2. **Install the operational harness** (Claude Code) — one command, backs up your existing config first:
+   ```bash
+   bash claude-code-setup/install.sh
+   ```
+   Then **restart Claude Code** and run `/agents`. This gives you the principles, hooks, the scaled review gate, the secret-commit blocker, and the reviewer agents. See [The Operational Harness](docs/operational-harness.md).
+3. **Copy `templates/copilot-instructions.md`** into your project's `.github/` directory and customize it for your stack
 4. **Start with Deep Onboarding** — Run the [deep-onboarding prompt](agents/copilot/deep-onboarding.prompt.md) on your primary repo
-5. **Practice Build-Review-Iterate** on your next feature
+5. **Practice Build-Review-Iterate** on your next feature, and run `/done-check` before every commit/PR
 
 ### For Engineering Leaders
 
