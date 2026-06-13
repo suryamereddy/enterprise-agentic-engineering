@@ -4,7 +4,7 @@ This kit is the GitHub Copilot port of a Claude Code setup. Copilot and Claude C
 
 | Concept | Claude Code | GitHub Copilot equivalent | Notes |
 |---|---|---|---|
-| Always-on principles | `~/.claude/CLAUDE.md` | `.github/copilot-instructions.md` (+ `AGENTS.md`) | Auto-applied to Chat in all clients. **Repo-level, not user-global.** Coding agent reads both. |
+| Always-on principles | `~/.claude/CLAUDE.md` (user-global) | `.github/copilot-instructions.md` (repo) **+ `~/.copilot/instructions/00-principles.instructions.md` (user-global)** | Repo file = teammates per-repo; the user-global instruction file = *you, in every repo* (the true CLAUDE.md equivalent). `install.sh --user-global` sets it up. Coding agent reads repo files. |
 | Scoped rules | (in CLAUDE.md) | `.github/instructions/*.instructions.md` with `applyTo:` glob | VS Code/JetBrains/CLI only — **NOT github.com Chat**. |
 | Skills (`/done-check`, `/diagnose`…) | `~/.claude/skills/<n>/SKILL.md` | `.github/prompts/<n>.prompt.md` | Run with `/name` in Chat. VS Code primarily. |
 | Reviewer subagents | `~/.claude/agents/*.md` | `.github/agents/*.agent.md` custom agents (run as subagents) | The kit ships 4 (`adversarial-reviewer`, `security-auditor`, `performance-engineer`, `prod-data-verifier`) + a `stack-reviewer` template. VS Code loads any `.md`/`.agent.md` in `.github/agents/`; they appear in the dropdown and run as subagents. `tools:` must use canonical namespaced tool names (`search/codebase`, `search`, `edit/editFiles`, `execute/runInTerminal`, `execute/runTests`, `read/problems`, `search/usages`, `search/changes`, `web/fetch`). |
@@ -13,7 +13,7 @@ This kit is the GitHub Copilot port of a Claude Code setup. Copilot and Claude C
 | Action-specific behavior | (hooks) | VS Code `github.copilot.chat.{reviewSelection,commitMessageGeneration,pullRequestDescriptionGeneration}.instructions` | `codeGeneration`/`testGeneration` settings are **deprecated** → use instruction files. VS Code only. |
 | Memory | `projects/<p>/memory/` (you curate, local, permanent) + `status/` | **Copilot Memory** (auto-learned, cloud) — repo-level facts + user-level prefs, retrieved at session start, **validated against the current branch**, **auto-expires at 28 days** if unused. On-by-default for Pro/Pro+ (Mar 2026); works in Copilot CLI, code review, and the cloud agent. Plus `copilot-instructions.md`/`AGENTS.md` for rules you set. | **Different model:** Claude memory = *your curated knowledge base*; Copilot Memory = *facts Copilot learns automatically*. Encode durable rules you control in instructions; volatile status → `docs/status/`. |
 | The review gate | `/done-check` skill (scaled reviewers) | `/done-check` prompt + `pre-ship-check.yml` as a required check | Human/CI enforces the gate; no agent auto-spawn. |
-| One-command install | `install.sh` → `~/.claude/` | `install.sh <repo>` → the repo's `.github/`, `.vscode/`, `.git/hooks/` | Per-repo, not per-user. |
+| One-command install | `install.sh` → `~/.claude/` | `install.sh <repo>` → repo's `.github/` · `install.sh --user-global` → `~/.copilot/` (every repo) | Both modes: repo-level for the team, user-global for your personal baseline. |
 | MCP servers | session MCP | `.vscode/mcp.json` (VS Code) / repo Settings UI (coding agent) / `~/.copilot/mcp-config.json` (CLI) | Location differs per client — not shipped here. |
 
 ## What genuinely does not translate

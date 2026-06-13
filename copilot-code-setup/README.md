@@ -19,11 +19,15 @@ An opinionated **GitHub Copilot** baseline: always-on engineering instructions, 
 
 ## Install
 
+Two modes (combine them):
 ```bash
-git clone <this-repo> copilot-dev-kit
-cd copilot-dev-kit
-bash install.sh /path/to/your/repo      # defaults to current dir; backs up anything it overwrites
+git clone <this-repo> copilot-dev-kit && cd copilot-dev-kit
+
+bash install.sh /path/to/your/repo   # REPO-LEVEL  → that repo's .github/ (for the team / coding agent / github.com)
+bash install.sh --user-global        # USER-GLOBAL → ~/.copilot/ (principles + prompts + agents apply to EVERY repo you work in)
+bash install.sh /path/to/repo --user-global   # both
 ```
+**User-global is the Copilot equivalent of `~/.claude`** — run it once per machine and your principles/prompts/agents apply to all your Copilot CLI work, not just one repo. (Repo-level is what teammates get when they clone that repo.)
 
 Then:
 1. Fill in `<…>` in `.github/copilot-instructions.md` (your stack + conventions).
