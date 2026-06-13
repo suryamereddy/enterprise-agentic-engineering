@@ -2,7 +2,7 @@
 
 An opinionated **GitHub Copilot** baseline: always-on engineering instructions, reusable review/diagnose/verify prompts, scoped instruction files, a scaled pre-ship gate (Chat prompt + CI), and a 3-layer secret-commit blocker. The Copilot port of a Claude Code setup — generic and sanitized; fill in the `<…>` bits.
 
-> No names, repos, endpoints, or credentials inside. Copilot customizes very differently from Claude Code (no hooks/subagents/auto-memory) — see [`docs/claude-vs-copilot.md`](docs/claude-vs-copilot.md) for the honest mapping and what doesn't translate.
+> No names, repos, endpoints, or credentials inside. Copilot customizes very differently from Claude Code (no lifecycle hooks; subagents and memory follow a different model — Copilot has custom agents and its own auto-learned **Copilot Memory**) — see [`docs/claude-vs-copilot.md`](docs/claude-vs-copilot.md) for the honest mapping and what doesn't translate.
 
 ## What you get
 

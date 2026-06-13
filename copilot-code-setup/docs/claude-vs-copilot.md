@@ -1,6 +1,6 @@
 # Claude Code → GitHub Copilot: how the harness maps
 
-This kit is the GitHub Copilot port of a Claude Code setup. Copilot and Claude Code customize very differently — Copilot has **no hooks, no subagents, no auto-recalled memory**. Here's the honest mapping, including what does NOT translate.
+This kit is the GitHub Copilot port of a Claude Code setup. Copilot and Claude Code customize very differently — Copilot has **no lifecycle hooks**, and its subagents and memory work on a different model (Copilot has custom agents, and its own auto-learned **Copilot Memory** — not Claude's hand-curated local store). Here's the honest mapping, including what does NOT translate.
 
 | Concept | Claude Code | GitHub Copilot equivalent | Notes |
 |---|---|---|---|
@@ -11,14 +11,14 @@ This kit is the GitHub Copilot port of a Claude Code setup. Copilot and Claude C
 | **Hooks** (date inject, guards, format) | `settings.json` lifecycle hooks | **No equivalent.** Translated to: git `pre-commit`, **GitHub Actions** (`pre-ship-check.yml`), GitHub **push protection** + branch protection, and VS Code action-instruction settings | This is the biggest gap — Copilot has no deterministic lifecycle hooks. Enforcement moves to git + CI + GitHub-native. |
 | Secret-commit blocker | global git hook + PreToolUse hook | `git-hooks/pre-commit` (repo-local) + GitHub **push protection** + the CI scan job | Editor-agnostic; works for everyone incl. Copilot coding-agent PRs. |
 | Action-specific behavior | (hooks) | VS Code `github.copilot.chat.{reviewSelection,commitMessageGeneration,pullRequestDescriptionGeneration}.instructions` | `codeGeneration`/`testGeneration` settings are **deprecated** → use instruction files. VS Code only. |
-| Auto-recalled memory + status split | `projects/<p>/memory/` + `status/` | **No auto-recall.** Durable facts → `copilot-instructions.md`; volatile status → `docs/status/` (referenced, not auto-loaded) | The discipline survives (keep the always-applied file durable); the automatic recall does not. |
+| Memory | `projects/<p>/memory/` (you curate, local, permanent) + `status/` | **Copilot Memory** (auto-learned, cloud) — repo-level facts + user-level prefs, retrieved at session start, **validated against the current branch**, **auto-expires at 28 days** if unused. On-by-default for Pro/Pro+ (Mar 2026); works in Copilot CLI, code review, and the cloud agent. Plus `copilot-instructions.md`/`AGENTS.md` for rules you set. | **Different model:** Claude memory = *your curated knowledge base*; Copilot Memory = *facts Copilot learns automatically*. Encode durable rules you control in instructions; volatile status → `docs/status/`. |
 | The review gate | `/done-check` skill (scaled reviewers) | `/done-check` prompt + `pre-ship-check.yml` as a required check | Human/CI enforces the gate; no agent auto-spawn. |
 | One-command install | `install.sh` → `~/.claude/` | `install.sh <repo>` → the repo's `.github/`, `.vscode/`, `.git/hooks/` | Per-repo, not per-user. |
 | MCP servers | session MCP | `.vscode/mcp.json` (VS Code) / repo Settings UI (coding agent) / `~/.copilot/mcp-config.json` (CLI) | Location differs per client — not shipped here. |
 
 ## What genuinely does not translate
 - **Deterministic lifecycle hooks.** Copilot can't run a script on session start / before a tool / on stop. The closest is "tell it in the instructions" (advisory) + enforce mechanically at git/CI/GitHub level (deterministic). This kit does the latter.
-- **Auto-recalled persistent memory.** Copilot re-reads `copilot-instructions.md` each request but has no growing memory store. Keep durable knowledge in that file; don't expect it to "remember" across sessions beyond what's committed.
+- **A curated, user-controlled memory store.** Copilot now HAS memory (**Copilot Memory**, on-by-default for Pro/Pro+ since Mar 2026) — but it's *auto-learned by Copilot, cloud-stored, repo/user-scoped, and auto-expires at 28 days*, not a local knowledge base you author and keep like Claude's `memory/`. You can't hand-curate it the same way; for durable facts you control, use `copilot-instructions.md`/`AGENTS.md`. (Source: docs.github.com/copilot/concepts/agents/copilot-memory)
 - **Personal (user-global) instructions** are UI-only on github.com (no committable file) — documented in CUSTOMIZE, can't be shipped.
 
 ## Client caveats (verified June 2026)
