@@ -341,6 +341,6 @@ The methodology is tech-stack-agnostic, but for context, these are the technolog
 
 ---
 
-**Surya Mereddy** · Application Architect · [LinkedIn](https://linkedin.com/in/suryamereddy)
+**Surya Mereddy** · Application Architect · [LinkedIn](https://www.linkedin.com/in/surya-mereddy/)
 
 </div>
