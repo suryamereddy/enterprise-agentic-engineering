@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Not Vibe Coding — Native AI Engineering</title>
+
+  <link rel="stylesheet" href="vendor/reveal/dist/reset.css">
+  <link rel="stylesheet" href="vendor/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="vendor/reveal/plugin/highlight/monokai.css">
+
+  <style>
+    :root{
+      --bg:#0b0e14; --panel:#10141d; --panel2:#0d1117;
+      --ink:#e6edf3; --muted:#8b949e; --line:#222a37;
+      --green:#3fb950; --green-bright:#56d364;
+      --cyan:#58a6ff; --amber:#e3b341; --red:#f85149; --violet:#bc8cff;
+      --mono:"SF Mono",ui-monospace,"JetBrains Mono","Roboto Mono",Menlo,Consolas,monospace;
+      --sans:system-ui,-apple-system,"Segoe UI",Inter,"Helvetica Neue",sans-serif;
+    }
+
+    .reveal{
+      font-family:var(--sans);
+      font-size:30px;
+      color:var(--ink);
+      letter-spacing:.1px;
+    }
+    .reveal-viewport{
+      background:
+        radial-gradient(1200px 700px at 78% -10%, rgba(63,185,80,.10), transparent 60%),
+        radial-gradient(900px 600px at -5% 110%, rgba(88,166,255,.10), transparent 55%),
+        var(--bg);
+    }
+
+    .reveal h1,.reveal h2,.reveal h3,.reveal h4{
+      font-family:var(--sans); color:var(--ink);
+      font-weight:800; text-transform:none; letter-spacing:-.5px; line-height:1.08;
+      margin:0 0 .35em;
+    }
+    .reveal h1{font-size:1.95em;}
+    .reveal h2{font-size:1.5em;}
+    .reveal h3{font-size:1.15em;}
+    .reveal p{line-height:1.4; margin:.5em 0;}
+    .reveal strong{color:var(--green-bright); font-weight:700;}
+    .reveal em{color:var(--cyan); font-style:normal;}
+    .reveal a{color:var(--cyan); text-decoration:none;}
+    .reveal ul,.reveal ol{display:block; margin-left:1em;}
+    .reveal li{margin:.38em 0; line-height:1.36;}
+    .reveal section{text-align:left;}
+
+    /* utility */
+    .mono{font-family:var(--mono);}
+    .muted{color:var(--muted);}
+    .green{color:var(--green-bright);}
+    .cyan{color:var(--cyan);}
+    .amber{color:var(--amber);}
+    .red{color:var(--red);}
+    .violet{color:var(--violet);}
+    .center{text-align:center;}
+    .small{font-size:.7em;}
+    .tiny{font-size:.55em;}
+    .nudge{margin-top:.6em;}
+
+    /* kicker / eyebrow */
+    .kicker{
+      font-family:var(--mono); font-size:.5em; letter-spacing:3px;
+      text-transform:uppercase; color:var(--green);
+      display:inline-block; margin-bottom:.8em;
+      border:1px solid var(--line); border-radius:999px; padding:.32em .9em;
+      background:rgba(63,185,80,.06);
+    }
+    .kicker.cyan{color:var(--cyan); background:rgba(88,166,255,.06);}
+    .kicker.amber{color:var(--amber); background:rgba(227,179,65,.06);}
+
+    /* big number */
+    .bignum{
+      font-family:var(--mono); font-weight:800; line-height:.95;
+      font-size:2.5em; letter-spacing:-2px;
+      background:linear-gradient(180deg,#eafff0, var(--green-bright) 55%, #2ea043);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+
+    /* terminal window for demo cues */
+    .term{
+      background:var(--panel2);
+      border:1px solid var(--line);
+      border-radius:12px;
+      box-shadow:0 18px 60px rgba(0,0,0,.45);
+      overflow:hidden;
+      font-family:var(--mono);
+      font-size:.62em; line-height:1.5;
+    }
+    .term .bar{
+      background:#0a0d13; border-bottom:1px solid var(--line);
+      padding:.5em .8em; display:flex; align-items:center; gap:.5em;
+    }
+    .term .bar .dot{width:.7em; height:.7em; border-radius:50%; display:inline-block;}
+    .term .bar .r{background:#ff5f56;} .term .bar .y{background:#ffbd2e;} .term .bar .g{background:#27c93f;}
+    .term .bar .t{margin-left:.6em; color:var(--muted); font-size:.85em;}
+    .term .body{padding:.9em 1.1em;}
+    .term .body .pr{color:var(--green);}
+    .term .body .cm{color:var(--ink);}
+    .term .body .ok{color:var(--green-bright);}
+    .term .body .err{color:var(--red);}
+    .term .body .dim{color:var(--muted);}
+
+    /* demo / clip banner */
+    .cue{
+      display:flex; align-items:center; gap:.6em;
+      font-family:var(--mono); font-size:.62em; letter-spacing:1px;
+      border-radius:10px; padding:.55em .9em; margin:.2em 0;
+      border:1px dashed; width:fit-content;
+    }
+    .cue.live{color:var(--green-bright); border-color:rgba(63,185,80,.6); background:rgba(63,185,80,.07);}
+    .cue.clip{color:var(--cyan); border-color:rgba(88,166,255,.6); background:rgba(88,166,255,.07);}
+    .cue b{letter-spacing:2px;}
+
+    /* takeaway banner */
+    .takeaway{
+      margin-top:.7em; padding:.6em .95em; border-left:4px solid var(--green);
+      background:linear-gradient(90deg, rgba(63,185,80,.12), rgba(63,185,80,.02));
+      border-radius:0 10px 10px 0; font-weight:700; font-size:.92em;
+    }
+    .takeaway .lbl{font-family:var(--mono); font-size:.62em; letter-spacing:2px; color:var(--green); display:block; margin-bottom:.15em; font-weight:600;}
+
+    /* cards / grid */
+    .grid{display:grid; gap:.7em;}
+    .g2{grid-template-columns:1fr 1fr;}
+    .g3{grid-template-columns:1fr 1fr 1fr;}
+    .card{
+      background:var(--panel); border:1px solid var(--line); border-radius:12px;
+      padding:.7em .85em;
+    }
+    .card h4{font-size:.78em; margin:0 0 .25em; color:var(--ink);}
+    .card .h{font-family:var(--mono); font-size:.55em; letter-spacing:2px; color:var(--muted); text-transform:uppercase;}
+    .card p{margin:.2em 0; font-size:.74em; line-height:1.32;}
+    .stat{font-family:var(--mono); font-weight:800; font-size:1.15em; color:var(--green-bright);}
+
+    /* chips row */
+    .chips{display:flex; flex-wrap:wrap; gap:.45em; margin-top:.3em;}
+    .chip{
+      font-family:var(--mono); font-size:.55em; letter-spacing:1px;
+      border:1px solid var(--line); border-radius:8px; padding:.35em .6em;
+      color:var(--ink); background:var(--panel);
+    }
+    .chip b{color:var(--green-bright);}
+
+    /* labels for measured / estimate */
+    .tag{font-family:var(--mono); font-size:.5em; letter-spacing:1px; padding:.18em .5em; border-radius:6px; vertical-align:middle;}
+    .tag.m{color:#0b0e14; background:var(--green-bright);}
+    .tag.e{color:#0b0e14; background:var(--amber);}
+
+    /* quote / spine */
+    .spine{
+      font-size:1.18em; line-height:1.34; font-weight:700; max-width:21em;
+    }
+    .spine .hl{color:var(--green-bright);}
+
+    /* footer */
+    .reveal .slide-footer{
+      position:fixed; bottom:14px; left:18px; z-index:30;
+      font-family:var(--mono); font-size:13px; color:#3b4456; letter-spacing:1px;
+    }
+    .reveal .slide-number{
+      font-family:var(--mono); background:transparent; color:#3b4456; font-size:13px; right:18px; bottom:10px;
+    }
+    .reveal .progress{height:3px; color:var(--green);}
+
+    /* commandments columns */
+    .cmd{columns:2; column-gap:2.2em; font-family:var(--mono); font-size:.74em; line-height:1.9;}
+    .cmd .n{color:var(--green); display:inline-block; width:1.6em;}
+    .cmd .star{color:var(--amber);}
+
+    /* divider section */
+    .divider h2{font-size:2.1em;}
+    .divider .rule{height:3px; width:3.5em; background:var(--green); border-radius:3px; margin:.5em 0 .8em;}
+
+    /* backup marker */
+    .backup-flag{
+      font-family:var(--mono); font-size:.5em; letter-spacing:3px; color:var(--amber);
+      border:1px solid rgba(227,179,65,.4); border-radius:999px; padding:.3em .9em;
+      background:rgba(227,179,65,.06); display:inline-block; margin-bottom:.7em;
+    }
+
+    .reveal section img, .reveal pre{box-shadow:none;}
+    .fragment.grow-in{}
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slide-footer">native-ai-engineering · S. Mereddy</div>
+  <div class="slides">
+
+    <!-- ============ 0 · TITLE / HOLDING ============ -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker">show &amp; tell · 20 months · production</div>
+      <h1>Not Vibe Coding</h1>
+      <h3 class="muted" style="font-weight:600; margin-top:-.1em;">20 Months of Native AI Engineering at Enterprise Scale</h3>
+      <p class="nudge mono" style="font-size:.66em; color:var(--muted);">
+        Surya Mereddy &nbsp;·&nbsp; enterprise engineer — .NET / Azure / Cosmos / Kafka / MuleSoft
+      </p>
+      <p class="mono" style="font-size:.6em; color:var(--green);">github.com/suryamereddy/enterprise-agentic-engineering</p>
+      <aside class="notes">
+        HOLDING SLIDE — up as the room fills. Don't start talking to it.
+        When you're ready, advance to the BLACK cold-open slide and tell the silent-drop story from memory.
+        Title is a placeholder you can swap: "Not Vibe Coding" (punchy) vs "The Moat Is the Harness, Not the Model".
+      </aside>
+    </section>
+
+    <!-- ============ 1 · COLD OPEN (black, no content) ============ -->
+    <section data-background-color="#000000">
+      <p class="mono" style="font-size:.5em; color:#1f2733; letter-spacing:4px;">[ live · terminal · cold open ]</p>
+      <aside class="notes">
+        ⌨ COLD OPEN — fear → proof → scale. NO slide content on purpose; you + the terminal carry it.
+
+        SAY (close to verbatim):
+        "A few months ago, a single sort clause I shipped silently HID ninety-nine percent of a production
+        queue — one million, thirty-eight thousand documents — from the view that was supposed to process them.
+        Nothing errored. No alert fired. The queue looked completely healthy and was quietly doing one percent
+        of its job.
+        It wasn't a typo, and it wasn't even AI's fault. It was the kind of mistake that LOOKS COMPLETELY CORRECT
+        right up until it's a catastrophe. I'll come back to exactly how that happened.
+        But first I want to show you the LEAST impressive thing my AI setup does —"
+
+        ⌨ LIVE DEMO #1 (~40s): type a commit containing a FAKE-but-realistic API key → pre-commit hook BLOCKS it.
+        "— it just refused to let me do something stupid. And it'll do that a thousand times before I ever notice."
+
+        CRITICAL: never say "deleted/gone" — it was HID / silently excluded (docs were invisible to the query, not deleted).
+        SAFETY: clean demo profile, scrollback scrubbed, FAKE key shape only, never run /creds on stage.
+        FALLBACK: recorded clip cued if the hook is slow. Then advance.
+      </aside>
+    </section>
+
+    <!-- ============ 2 · THE ONE NUMBER ============ -->
+    <section data-background-color="#0b0e14" class="center">
+      <div class="bignum">1,117</div>
+      <p class="mono nudge" style="font-size:.95em; color:var(--ink);">AI sessions &nbsp;·&nbsp; 780&nbsp;MB &nbsp;·&nbsp; 20&nbsp;months</p>
+      <p class="muted nudge" style="font-size:.8em;">This isn't a thread of prompts. It's an engineering practice.</p>
+      <p class="green mono" style="font-size:.62em;">…and it exists <em>because</em> of that ninety-nine percent.</p>
+      <aside class="notes">
+        Reveal the number after the demo lands. THE one number you own all talk (don't mention "72 tracked").
+        "This isn't a thread of prompts. It's an engineering practice. And it exists BECAUSE of that ninety-nine percent."
+        Plants callback #2 ("1,117") — you pay it off at the /recall demo.
+        Status: MEASURED (transcript count on the live machine).
+      </aside>
+    </section>
+
+    <!-- ============ 3 · TWO CAMPS + THESIS ============ -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker cyan">who &amp; thesis · 30 seconds of me</div>
+      <div class="grid g2" style="align-items:stretch;">
+        <div class="card">
+          <span class="h">camp 1 · hype</span>
+          <p style="font-size:.95em;">“AI replaces developers.”</p>
+          <p class="red mono" style="font-size:.7em;">✗ wrong</p>
+        </div>
+        <div class="card">
+          <span class="h">camp 2 · skeptics</span>
+          <p style="font-size:.95em;">“AI can't ship production.”</p>
+          <p class="red mono" style="font-size:.7em;">✗ wrong</p>
+        </div>
+      </div>
+      <p class="nudge"><span class="muted">What both miss:</span> <strong>a field-tested operating model.</strong></p>
+      <div class="takeaway fragment">
+        <span class="lbl">thesis</span>
+        Native AI engineering = directing AI <em>like a team</em>, under invariants <em>you</em> enforce — so the output is production-grade, not just plausible.
+      </div>
+      <aside class="notes">
+        30-sec who: enterprise engineer, trucking/logistics, 40+ microservices.
+        Two camps — BOTH WRONG; what's missing is a field-tested operating model.
+
+        ERA ARC — compressed to ONE honest sentence (this replaces the whole 3-era section):
+        "I've been at this 20 months across more than a thousand sessions, and here's the punchline of that whole
+        arc: the productivity didn't come from the model getting smarter — it came from ME building the protocols
+        to direct it. That's the entire talk."
+        Then reveal the thesis line.
+      </aside>
+    </section>
+
+    <!-- ============ 4 · THE NUMBERS (portfolio) ============ -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker">proof, fast</div>
+      <div class="grid g2">
+        <div class="card center"><div class="stat">12+</div><p class="muted">production apps built / transformed</p></div>
+        <div class="card center"><div class="stat">40+</div><p class="muted">microservices</p></div>
+        <div class="card center"><div class="stat">3,000,000+</div><p class="muted">DB records managed</p></div>
+        <div class="card center"><div class="stat">3</div><p class="muted">legacy middleware APIs eliminated</p></div>
+      </div>
+      <div class="grid g2 nudge fragment">
+        <div class="card"><p style="font-size:.8em;"><span class="stat" style="font-size:1em;">4,000–6,000</span> hrs manual work replaced <span class="tag e">ESTIMATE</span></p></div>
+        <div class="card"><p style="font-size:.8em;">for <span class="stat" style="font-size:1em;">~$1,000</span>/mo of AI spend <span class="tag e">ESTIMATE</span></p></div>
+      </div>
+      <p class="muted small nudge fragment">“Those two are <span class="amber">estimates</span>, and I'll defend them at the end. Everything else I can pull from a log right now.”</p>
+      <aside class="notes">
+        Read the top 4 out loud. Then the honest aside (builds trust, on-thesis):
+        "Two more numbers matter — ~4–6k hours replaced, for ~$1k/mo. Those two are ESTIMATES, and I'll defend
+        them at the end. Everything else on this slide I can pull from a log right now."
+        Hold the ROI — it's the closer, not a chapter.
+      </aside>
+    </section>
+
+    <!-- ============ 5 · CORE DIVIDER ============ -->
+    <section data-background-color="#0a0d13" class="divider center">
+      <div class="kicker">the core · 18 minutes · 3 beats</div>
+      <h2>Keeping AI honest<br>across the lifecycle</h2>
+      <div class="rule" style="margin-left:auto;margin-right:auto;"></div>
+      <p class="spine center" style="margin:.4em auto 0;">
+        AI will hand you something that <span class="hl">looks perfect</span> and is <span class="hl">silently wrong</span> —
+        so the job became building the system that makes it <span class="hl">prove it's right</span> before it ships.
+      </p>
+      <p class="chips" style="justify-content:center;">
+        <span class="chip"><b>1</b> BUILD</span>
+        <span class="chip"><b>2</b> CORRECT</span>
+        <span class="chip"><b>3</b> SHIP &amp; OPERATE</span>
+      </p>
+      <aside class="notes">
+        This is ONE arc with three beats — NOT three acts. The spine line on screen is the sentence the whole
+        talk is a verse of. 80/20 rule: every Werner proper-noun lands on a portable Commandment within 10 seconds.
+      </aside>
+    </section>
+
+    <!-- ============ 6 · BEAT 1 — BUILD ============ -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker">beat 1 · build — the highs</div>
+      <ul style="font-size:.9em;">
+        <li class="fragment"><strong>Deep Onboarding</strong> — never modify code you haven't understood → AI writes an 8-doc mastery suite <em>first</em>. 15+ repos; every time it surfaced an undocumented integration path. <span class="muted">→ understand before you modify.</span></li>
+        <li class="fragment"><strong>The Middleware Killer</strong> <span class="mono muted tiny">(229 msgs)</span> — eliminated an entire middleware API layer via direct integration. <span class="muted">→ AI's leverage is comprehension, not typing.</span></li>
+        <li class="fragment"><strong>The Overnight Build</strong> <span class="mono muted tiny">(216 msgs)</span> — a complete multi-tenant SaaS from zero in one session. A yacht-charter app, <em>for the CEO.</em></li>
+      </ul>
+      <div class="cue live fragment"><b>⌨ LIVE DEMO #2 — THE MARQUEE</b> &nbsp;·&nbsp; ~3 min &nbsp;·&nbsp; 3 reviewers argue on a real diff</div>
+      <div class="takeaway fragment"><span class="lbl">takeaway</span>AI output is a draft. The <em>team</em> reviews the draft.</div>
+      <aside class="notes">
+        Reveal the three war stories one at a time. Overnight Build = the smile beat; let them enjoy it.
+
+        ⌨ LIVE DEMO #2 (MARQUEE, ~3 min): spawn 3 INDEPENDENT reviewer agents in parallel on a real diff —
+        adversarial-reviewer + security-auditor + kafka-reviewer. They ARGUE. You keep the conclusions.
+        "This is what 'multi-agent' actually means — not one chat. A team, with no shared context, trying to
+        break the same code three different ways."
+        SAFETY: pre-stage the canned diff; recorded run cued if agents go slow/verbose.
+      </aside>
+    </section>
+
+    <!-- ============ 7 · BEAT 2 — CORRECT ============ -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker amber">beat 2 · correct — the fall, then the method</div>
+      <div class="card" style="border-color:rgba(227,179,65,.35);">
+        <span class="h amber">the humbling · 63 msgs · the vulnerability beat</span>
+        <p style="font-size:.82em;">An AI logic conversion. <strong style="color:var(--amber)">It compiled. Tests were green. It looked perfect.</strong> It was silently, subtly <span class="red">wrong</span> — the business logic had quietly changed.</p>
+        <p class="muted tiny">→ Revert-Prove-Rebuild: stash the AI change, prove the original, rebuild from source. Never trust output you haven't proven against reality.</p>
+      </div>
+      <div class="card nudge fragment" style="border-color:rgba(248,81,73,.35);">
+        <span class="h red">the 99% — cold open, paid off</span>
+        <p style="font-size:.82em;">A sort on a sparse field <strong class="red">silently excluded 1,038,173 of 1,048,770 docs</strong> — 99% of a prod queue — from the prioritized view. <em>No error. It looked perfect.</em></p>
+        <p class="muted tiny">→ assume silent data loss until real row counts prove otherwise.</p>
+      </div>
+      <div class="takeaway fragment"><span class="lbl">takeaway · “looks perfect”</span>Unit tests prove consistency. Only <em>real data</em> proves correctness.</div>
+      <aside class="notes">
+        NO demo here — telling beats showing. Place The Humbling at the PEAK of Beat 1's confidence; max contrast.
+
+        SAY (Humbling): "Early on I had AI convert business logic. It compiled. The tests were green. It LOOKED
+        perfect. It was also silently, subtly wrong."
+
+        SAY (99% payoff): "Remember the queue from the first thirty seconds? A sort on a field most documents didn't
+        even have silently EXCLUDED 1,038,173 of 1,048,770 documents — 99% — from the prioritized view. No error.
+        It looked perfect. It just quietly did one percent of the work."
+        NEVER say deleted/gone — HID / silently excluded. Numbers: 1,038,173 / 1,048,770. Both MEASURED.
+
+        Land the takeaway: "'Looks perfect' is the most expensive phrase in software. My entire harness exists so
+        I never have to trust it again."
+      </aside>
+    </section>
+
+    <!-- ============ 8 · BEAT 3 — SHIP & OPERATE ============ -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker">beat 3 · ship &amp; operate — the grit nobody demos</div>
+      <div class="grid g2">
+        <div class="card">
+          <span class="h green">deploy · bre-edi</span>
+          <p style="font-size:.74em;">SQLite→Cosmos migration that became a full infra stand-up: Pulumi · OIDC Phase 2 · JFrog · Okta · the bootstrap dance. Added a <strong>prod approval gate</strong> after catching prod deploy <em>unguarded</em>.</p>
+          <p class="mono tiny green">1,122/1,122 parity ×3 · 38/38 E2E <span class="tag m">MEASURED</span></p>
+          <p class="muted tiny">→ one-click or it doesn't count.</p>
+        </div>
+        <div class="card">
+          <span class="h cyan">operate · the 2am incident</span>
+          <p style="font-size:.74em;">Topics-replicator “couldn't post.” Everyone blamed a firewall. It was a <strong>missing ACL on the key-owner service account</strong> — silent dead-air, no error.</p>
+          <p class="muted tiny">→ assume silent failure until the logs prove otherwise. DLQ everything · dry-run before live · hash before you process.</p>
+        </div>
+      </div>
+      <div class="cue clip fragment"><b>▶ RECORDED CLIP</b> &nbsp;·&nbsp; 20 sec &nbsp;·&nbsp; <span class="mono">werner-new-app</span> → one command, full infra + every ticket filed</div>
+      <div class="takeaway fragment"><span class="lbl">takeaway</span>Native AI engineering covers the whole lifecycle — including 2am.</div>
+      <aside class="notes">
+        The half nobody demos. Emotional note: competence under pressure.
+
+        ▶ RECORDED CLIP (20s): werner-new-app — one command scaffolds repo conventions, JFrog repos, Pulumi stacks,
+        ACA+Cosmos+KV, CI/CD, OIDC, Okta + generates every CloudEng ticket. Show command + result count.
+        "One command. The whole infra, plus every ticket it needs filed."
+        SAFETY: recorded/dry-run ONLY — never file real tickets live.
+      </aside>
+    </section>
+
+    <!-- ============ 9 · HARNESS DIVIDER ============ -->
+    <section data-background-color="#0a0d13" class="divider center">
+      <div class="kicker">the moat · 8 minutes</div>
+      <h2>The Harness</h2>
+      <div class="rule" style="margin-left:auto;margin-right:auto;"></div>
+      <p class="muted" style="font-size:.95em;">Everything I just showed runs on a setup I built —<br>and can hand you.</p>
+      <aside class="notes">
+        Transition: "Everything I just showed runs on a setup I built — and can hand you." This section is the
+        transferable architecture; spend the time on the 4 pillars.
+      </aside>
+    </section>
+
+    <!-- ============ 10 · HARNESS INVENTORY + PILLARS ============ -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker">inventory · flash 5 seconds · it's real and it's big</div>
+      <p class="chips">
+        <span class="chip"><b>14</b> skills</span>
+        <span class="chip"><b>5</b> reviewer agents</span>
+        <span class="chip"><b>9</b> hooks</span>
+        <span class="chip"><b>56</b> memory files</span>
+        <span class="chip"><b>8</b> status files</span>
+        <span class="chip">mirrored <b>1:1</b> to Copilot</span>
+      </p>
+      <div class="grid g2 nudge">
+        <div class="card fragment"><span class="h">pillar 1</span><h4>Always-on principles</h4><p class="muted">CLAUDE.md / copilot-instructions inject my non-negotiables into every session.</p></div>
+        <div class="card fragment"><span class="h">pillar 2</span><h4>Deterministic hooks</h4><p class="muted">Date stamps, the secret-block you saw, auto-format, review reminders — code that always runs, not the model's judgment.</p></div>
+        <div class="card fragment"><span class="h">pillar 3</span><h4>Memory + status discipline</h4><p class="muted">Durable facts vs. volatile status kept separate — so the AI never acts on stale context.</p></div>
+        <div class="card fragment"><span class="h">pillar 4</span><h4>The scaled review gate</h4><p class="muted">Adversarial review sized to the change. Nothing ships on “it compiles.”</p></div>
+      </div>
+      <div class="cue live fragment"><b>⌨ LIVE DEMO #3 — THE CLOSER</b> &nbsp;·&nbsp; ~90s · lowest risk &nbsp;·&nbsp; <span class="mono">/recall hvf</span></div>
+      <aside class="notes">
+        Inventory = flash for 5s (proof it's real and big — don't recite). "Mirrored to Copilot, one line: not tool-locked."
+        Spend time on the 4 pillars — this is the transferable architecture.
+
+        ⌨ LIVE DEMO #3 (CLOSER, ~90s, LOWEST RISK — local, no network): /recall hvf → AI surfaces the 99% landmine
+        AND the current rollout status.
+        PAY OFF callback #2: "My AI remembers all 1,117 sessions. Yours forgets every single one — unless you build this."
+        The moat is the operating system around the model — the harness, not the model. If this demo dies, cut
+        straight to the close with zero damage.
+      </aside>
+    </section>
+
+    <!-- ============ 11 · ECONOMICS ============ -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker amber">the honest money slide</div>
+      <div class="center" style="margin:.2em 0 .4em;">
+        <span class="bignum" style="font-size:1.7em;">~$1k</span><span class="muted mono"> /mo</span>
+        <span class="muted mono" style="margin:0 .5em;">→</span>
+        <span class="bignum" style="font-size:1.7em; background:linear-gradient(180deg,#dcefff,var(--cyan) 55%,#1f6feb); -webkit-background-clip:text; background-clip:text;">4–6k</span>
+        <span class="muted mono"> hrs replaced</span>
+      </div>
+      <p class="center muted" style="font-size:.78em;">12+ apps · 3 middleware layers gone · <span class="tag e">ESTIMATE</span> on both headline figures</p>
+      <div class="card nudge fragment" style="border-color:rgba(227,179,65,.35);">
+        <span class="h amber">the caveat — because credibility</span>
+        <p style="font-size:.8em;">Bottom-up token→dollar estimates <em>overshoot</em> — caching skews them. I trust the <strong>billing API</strong>, not the math. I measured it.</p>
+      </div>
+      <p class="center green nudge fragment" style="font-size:.82em;">“The cheapest senior engineer Werner ever hired — and it's the one I already was, amplified.”</p>
+      <aside class="notes">
+        Both headline figures are ESTIMATES — say so. The caveat is the credibility move: token math overshoots
+        (caching), trust the billing API. Then the line: "cheapest senior engineer… the one I already was, amplified."
+      </aside>
+    </section>
+
+    <!-- ============ 12 · 11 COMMANDMENTS ============ -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker">photograph this slide</div>
+      <h3>The 11 Commandments</h3>
+      <div class="cmd">
+        <div><span class="n">1</span><span class="star">★</span> Deep Onboard First</div>
+        <div><span class="n">2</span><span class="star">★</span> Trust but Verify</div>
+        <div><span class="n">3</span> Review Your Own Code (5+ rounds)</div>
+        <div><span class="n">4</span> Never Double-Retry</div>
+        <div><span class="n">5</span> Document as You Build</div>
+        <div><span class="n">6</span><span class="star">★</span> One-Click or It Doesn't Count</div>
+        <div><span class="n">7</span> DLQ Everything</div>
+        <div><span class="n">8</span> Hash Before You Process</div>
+        <div><span class="n">9</span> Dry-Run Before Live</div>
+        <div><span class="n">10</span> Pin Your Dependencies</div>
+        <div><span class="n">11</span> Never Commit a Secret</div>
+      </div>
+      <p class="muted small nudge">Read three out loud: <span class="green">Deep Onboard First · Trust but Verify · One-Click or It Doesn't Count.</span></p>
+      <aside class="notes">
+        Tell them to photograph it. Read the three starred ones. Then go to the close.
+      </aside>
+    </section>
+
+    <!-- ============ 13 · CLOSE ============ -->
+    <section data-background-color="#0a0d13" class="center">
+      <div class="kicker">the close</div>
+      <p class="spine center" style="font-size:1.18em; margin:0 auto;">
+        AI didn't replace the engineer —<br>it demanded a <span class="hl">better one</span>:<br>
+        the one who builds the system that makes AI <span class="hl">prove it's right.</span>
+      </p>
+      <p class="nudge" style="font-size:.9em; color:var(--ink);">Don't clone my code. <strong>Clone the discipline.</strong></p>
+      <p class="mono nudge" style="font-size:.66em; color:var(--green);">github.com/suryamereddy/enterprise-agentic-engineering</p>
+      <aside class="notes">
+        MIC-DROP (close to verbatim):
+        "Twenty months ago I thought AI might replace the engineer. What it actually did was refuse to let me be a
+        WORSE one — it demanded somebody who builds the system that makes the machine prove it's right, every single
+        time, before anything reaches a customer. The model is the engine; YOU are the one who builds the thing that
+        keeps it honest. The repo is public — clone my code? No. Clone the discipline."
+
+        Hallway line: "AI didn't replace the engineer — it demanded a better one: the one who builds the system
+        that makes AI prove it's right."
+        Then Q&A. If demos ran clean, you have the 5-min buffer for extra Q&A.
+      </aside>
+    </section>
+
+    <!-- ============ BACKUP DIVIDER ============ -->
+    <section data-background-color="#000000" class="center">
+      <span class="backup-flag">↓ backup &amp; Q&amp;A slides ↓</span>
+      <p class="muted small">Not in the spoken track. Jump here from Q&amp;A.</p>
+      <aside class="notes">Everything past here is backup ammo for Q&A. Don't arrow into it after the mic-drop unless asked.</aside>
+    </section>
+
+    <!-- BACKUP · credibility ledger -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker amber">backup · measured vs estimate</div>
+      <h3>What's measured, what's an estimate</h3>
+      <div class="grid g2">
+        <div class="card">
+          <span class="h green">measured</span>
+          <p class="tiny">1,117 sessions · 780 MB · 20 mo</p>
+          <p class="tiny">99% exclusion = 1,038,173 / 1,048,770 docs hidden</p>
+          <p class="tiny">1,122/1,122 parity ×3 · 38/38 E2E (bre-edi)</p>
+          <p class="tiny">14 skills · 5 agents · 9 hooks · 56 memory · 8 status</p>
+          <p class="tiny">PR #5 merged 2026-06-18</p>
+        </div>
+        <div class="card">
+          <span class="h amber">estimate / rounded</span>
+          <p class="tiny">4,000–6,000 hrs of manual work replaced</p>
+          <p class="tiny">~$1,000/mo AI spend (billing API, not token math)</p>
+          <p class="tiny">12+ apps · 40+ microservices · 3M+ records · 3 middleware APIs (portfolio aggregate)</p>
+        </div>
+      </div>
+      <p class="muted tiny nudge">Correction baked in: the 99% queue docs were <strong>hidden / silently excluded</strong> from the prioritized view — <span class="amber">never deleted.</span></p>
+      <aside class="notes">Use this if anyone presses on the numbers. The honesty IS the credibility.</aside>
+    </section>
+
+    <!-- BACKUP · 6 methodologies -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker">backup · the method</div>
+      <h3>6 methodologies</h3>
+      <div class="grid g3" style="font-size:.82em;">
+        <div class="card"><h4>Deep Onboarding</h4><p class="muted tiny">understand before you modify → 8-doc mastery suite</p></div>
+        <div class="card"><h4>Build-Review-Iterate</h4><p class="muted tiny">AI re-tasked as its own reviewer, 5+ rounds</p></div>
+        <div class="card"><h4>Revert-Prove-Rebuild</h4><p class="muted tiny">prove the original before trusting the change</p></div>
+        <div class="card"><h4>Multi-Agent Orchestration</h4><p class="muted tiny">parallel independent / sequential dependent</p></div>
+        <div class="card"><h4>Docs as Deliverable</h4><p class="muted tiny">diagrams + runbooks are outputs (~5% of time)</p></div>
+        <div class="card"><h4>DLQ Everything</h4><p class="muted tiny">every consumer routes failures — no silent drops</p></div>
+      </div>
+      <aside class="notes">Backup for "how do you actually work" questions.</aside>
+    </section>
+
+    <!-- BACKUP · case studies + live projects -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker">backup · receipts</div>
+      <div class="grid g2">
+        <div class="card">
+          <span class="h">other case studies</span>
+          <p class="tiny">The Colossus (342 msgs — birthed deep-onboarding)</p>
+          <p class="tiny">The Backlog Slayer (850K backlog → SHA-256 delta → 78% reduction)</p>
+          <p class="tiny">The Pipeline Fortress (5 rounds caught 45+ issues)</p>
+          <p class="tiny">The Guardrail Suite (122 tests · 4,921 lines)</p>
+        </div>
+        <div class="card">
+          <span class="h cyan">live projects · the real day job</span>
+          <p class="tiny">bp-egress — Werner→BiggerPicture Kafka egress + go-live runbook</p>
+          <p class="tiny">bre-edi — SQLite→Cosmos + full infra (above)</p>
+          <p class="tiny">mm-mastermind — 176/199-field 1:1 parity · 3 live incidents</p>
+          <p class="tiny">hvf — the 99% landmine · finance/esker · pricing · yacht</p>
+        </div>
+      </div>
+      <aside class="notes">Proof it's a real Fortune-500 job, not a demo app. Pull a specific one if asked.</aside>
+    </section>
+
+    <!-- BACKUP · demo runbook / safety -->
+    <section data-background-color="#0b0e14">
+      <div class="kicker red">presenter · demo runbook (do not show)</div>
+      <h3 class="small">3 live + 1 clip · all pre-recorded as fallback</h3>
+      <ul class="tiny">
+        <li><b>#1 secret-block</b> (cold open ~40s) — FAKE key shape only · clean profile · scrollback scrubbed.</li>
+        <li><b>#2 marquee</b> (~3m) — 3 reviewers argue on a pre-staged canned diff · recorded run cued.</li>
+        <li><b>#3 /recall hvf</b> (closer ~90s) — local, no network, lowest risk · last on purpose.</li>
+        <li><b>clip werner-new-app</b> (20s) — recorded/dry-run ONLY · never file real tickets live.</li>
+        <li class="red">NEVER run /creds-index or the creds skill on stage — real credentials.</li>
+        <li>Fallback rule: any live demo stalls &gt;10s → cut to the recorded clip, keep talking.</li>
+      </ul>
+      <aside class="notes">This slide is for you, not the audience. Keep it in speaker view / printed notes.</aside>
+    </section>
+
+  </div>
+</div>
+
+<script src="vendor/reveal/dist/reveal.js"></script>
+<script src="vendor/reveal/plugin/notes/notes.js"></script>
+<script src="vendor/reveal/plugin/highlight/highlight.js"></script>
+<script>
+  Reveal.initialize({
+    width: 1280,
+    height: 720,
+    margin: 0.045,
+    minScale: 0.2,
+    maxScale: 1.6,
+    hash: true,
+    center: true,
+    controls: true,
+    progress: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealHighlight ]
+  });
+</script>
+</body>
+</html>

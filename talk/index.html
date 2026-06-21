@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0e14">
+  <meta name="color-scheme" content="dark">
+  <title>Not Vibe Coding — Native AI Engineering</title>
+  <meta name="description" content="A 45-minute conference talk: the moat is the harness, not the model. 20 months of native AI engineering at enterprise scale.">
+  <!-- social preview -->
+  <meta property="og:title" content="Not Vibe Coding — Native AI Engineering">
+  <meta property="og:description" content="The moat is the harness, not the model. 20 months of native AI engineering at enterprise scale.">
+  <meta property="og:type" content="website">
+  <style>
+    :root{
+      --bg:#0b0e14; --panel:#10141d; --ink:#e6edf3; --muted:#8b949e; --line:#222a37;
+      --green:#3fb950; --green-bright:#56d364; --cyan:#58a6ff;
+      --mono:"SF Mono",ui-monospace,"JetBrains Mono","Roboto Mono",Menlo,Consolas,monospace;
+      --sans:system-ui,-apple-system,"Segoe UI",Inter,"Helvetica Neue",sans-serif;
+      font-size:clamp(15px,1rem + .5vw,20px);
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0; min-height:100%;}
+    body{
+      font-family:var(--sans); color:var(--ink); line-height:1.5;
+      background:
+        radial-gradient(80vw 50vh at 85% -10%, rgba(63,185,80,.12), transparent 60%),
+        radial-gradient(70vw 50vh at -10% 110%, rgba(88,166,255,.12), transparent 55%),
+        var(--bg);
+      min-height:100vh; min-height:100dvh;
+      display:flex; align-items:center; justify-content:center;
+      padding:max(1.2rem, env(safe-area-inset-top)) 1.1rem max(1.2rem, env(safe-area-inset-bottom));
+    }
+    .wrap{max-width:34rem; width:100%; text-align:center;}
+    .kicker{
+      font-family:var(--mono); font-size:.62rem; letter-spacing:3px; text-transform:uppercase; color:var(--green);
+      border:1px solid var(--line); border-radius:999px; padding:.35em .9em; display:inline-block; margin-bottom:1.2rem;
+      background:rgba(63,185,80,.06);
+    }
+    h1{font-family:var(--sans); font-weight:800; letter-spacing:-.5px; font-size:clamp(2.2rem,9vw,3.4rem); line-height:1.04; margin:0 0 .3em;}
+    .sub{color:var(--muted); font-weight:600; font-size:1.05rem; margin:0 0 .4em;}
+    .spine{font-size:1.05rem; line-height:1.4; margin:1rem auto 1.6rem; max-width:28rem;}
+    .spine b{color:var(--green-bright);}
+    .choices{display:flex; flex-direction:column; gap:.8rem; margin:0 auto 1.4rem; max-width:24rem;}
+    a.card{
+      display:flex; align-items:center; gap:.9rem; text-align:left; text-decoration:none;
+      background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:.95rem 1.1rem;
+      color:var(--ink); transition:border-color .15s, transform .1s, background .15s;
+    }
+    a.card:hover{border-color:var(--green); background:rgba(63,185,80,.06);}
+    a.card:active{transform:scale(.985);}
+    a.card .ico{font-size:1.6rem; line-height:1; width:2.2rem; text-align:center;}
+    a.card .t{flex:1;}
+    a.card .t b{display:block; font-size:1.05rem;}
+    a.card .t span{display:block; color:var(--muted); font-size:.82rem; margin-top:.1em;}
+    a.card .go{color:var(--green-bright); font-family:var(--mono);}
+    .meta{font-family:var(--mono); font-size:.74rem; color:var(--muted); letter-spacing:.5px;}
+    .meta a{color:var(--cyan); text-decoration:none;}
+    .foot{margin-top:1.6rem; font-family:var(--mono); font-size:.7rem; color:#3b4456;}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <span class="kicker">show &amp; tell · 20 months · production</span>
+    <h1>Not Vibe Coding</h1>
+    <p class="sub">20 Months of Native AI Engineering at Enterprise Scale</p>
+    <p class="spine">AI will hand you something that <b>looks perfect</b> and is <b>silently wrong</b> — so the job became building the system that makes it <b>prove it's right</b> before it ships.</p>
+
+    <div class="choices">
+      <a class="card" href="index-v3.html">
+        <span class="ico">📱</span>
+        <span class="t"><b>Read it / phone</b><span>Tap-through, reflows to any screen · speaker notes toggle</span></span>
+        <span class="go">›</span>
+      </a>
+      <a class="card" href="index-v2.html">
+        <span class="ico">🖥️</span>
+        <span class="t"><b>Present it / projector</b><span>reveal.js deck · press <code>S</code> for speaker view</span></span>
+        <span class="go">›</span>
+      </a>
+    </div>
+
+    <p class="meta">Repo: <a href="https://github.com/suryamereddy/enterprise-agentic-engineering">github.com/suryamereddy/enterprise-agentic-engineering</a></p>
+    <p class="foot">Clone the discipline, not the code.</p>
+  </main>
+</body>
+</html>
