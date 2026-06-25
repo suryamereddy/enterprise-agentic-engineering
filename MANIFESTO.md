@@ -202,4 +202,4 @@ The best way to evaluate a methodology is to apply it. Start small. Verify again
 ---
 
 **Surya Mereddy**
-*Application Architect · Enterprise AI Engineering Practitioner*
+*Software Architect · Enterprise AI Engineering Practitioner*
