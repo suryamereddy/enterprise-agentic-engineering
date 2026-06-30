@@ -4,14 +4,17 @@
 
 > *This is the quantitative story. Not the methodology (that's in [methodology.md](methodology.md)), not the case studies (those are in [case-studies.md](case-studies.md)) — just the numbers, the timeline, and what they reveal about how AI-assisted development actually evolves in enterprise practice.*
 
+> **Scope of this analysis.** The full measured corpus is **1,117 AI sessions / 780 MB of transcripts** over 20 months. The per-session and per-month breakdowns below are drawn from the **72 deeply-analyzed sessions (2,938 messages)** within that corpus — the subset for which message-level data was extracted. **Data window: through March 2026.** Operational practices that emerged Apr–Jun 2026 are documented in [operational-harness.md](operational-harness.md).
+
 ---
 
 ## The Numbers
 
 | Metric | Value |
 |--------|-------|
-| Total sessions | 72 |
-| Total AI messages | 2,938 |
+| Full measured corpus | 1,117 sessions · 780 MB |
+| Deeply-analyzed sessions | 72 |
+| AI messages (analyzed subset) | 2,938 |
 | Total duration | 20 months (Jul 2024 – Mar 2026) |
 | Services touched | 40+ |
 | Applications built/transformed | 12+ |
@@ -32,6 +35,8 @@ Jul 2024 – Aug 2025        Oct 2025 – Dec 2025         Jan 2026 – Mar 2026
 119 messages                413 messages                2,406 messages
 4% of all messages          14% of all messages         82% of all messages
 ```
+
+*(September 2025 had no tracked sessions — the natural break between Era 1 and Era 2. Percentages are of the 2,938 analyzed messages.)*
 
 ### Era 1: Exploration (Jul 2024 – Aug 2025)
 **6 sessions · 119 messages · Testing the limits**
@@ -187,6 +192,7 @@ Trust Level
 2024-07  ▓░░░░░░░░░░░░░░░░░░░░░  8
 2025-07  ▓░░░░░░░░░░░░░░░░░░░░░  12
 2025-08  ▓▓▓▓▓░░░░░░░░░░░░░░░░░  99
+2025-09  ░░░░░░░░░░░░░░░░░░░░░  0   ← no tracked sessions (Era 1→2 break)
 2025-10  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░  373
 2025-11  ▓▓░░░░░░░░░░░░░░░░░░░░  45
 2025-12  ▓░░░░░░░░░░░░░░░░░░░░░  5   ← Holiday pause

@@ -13,7 +13,7 @@ Edit `~/.claude/git-hooks/secret-patterns.txt`:
 Test it: try to commit a file containing one of your literals; it should be blocked.
 
 ## 3. A reviewer for YOUR stack
-Copy `docs/templates/stack-reviewer-TEMPLATE.md` to `~/.claude/agents/<your-stack>-reviewer.md`, give it a lowercase-hyphen `name`, and fill in the `<FILL IN>` blocks with your own hard-won invariants — the bugs that have actually bitten you (the silent-failure modes, the config traps, the concurrency rules). This is the highest-leverage customization: a reviewer that knows your scars. Reference it from `/done-check`. **Don't bake secrets/host names/account ids into it.**
+Copy the repo's `templates/stack-reviewer.agent.md` to `~/.claude/agents/<your-stack>-reviewer.md`, give it a lowercase-hyphen `name`, and fill in the `<FILL IN>` blocks with your own hard-won invariants — the bugs that have actually bitten you (the silent-failure modes, the config traps, the concurrency rules). This is the highest-leverage customization: a reviewer that knows your scars. Reference it from `/done-check`. **Don't bake secrets/host names/account ids into it.**
 
 Keep repo-specific reviewers as **project** agents (`<repo>/.claude/agents/`), not global — a global one misfires on other repos.
 
@@ -28,7 +28,7 @@ Keep the "changed files only, non-blocking, at Stop (not per-edit)" shape — pe
 `guard-prod-flag-flip.sh` blocks flipping a production flag without explicit approval. It ships but is **not wired** by default. To enable, add it to the `PreToolUse`→`Bash` hooks array in `~/.claude/settings.json` and edit the script to match your flag tooling (LaunchDarkly, etc.).
 
 ## 6. Permissions
-`settings.json` denies force-push and prod-looking destructive SQL, and asks on DB shells / DML. Tighten or loosen for your environment. Add allow-rules for tools you use constantly to cut permission prompts (or run `/fewer-permission-prompts`).
+`settings.json` denies force-push and prod-looking destructive SQL, and asks on DB shells / DML. Tighten or loosen for your environment. Add allow-rules for tools you use constantly to cut permission prompts (or run `/fewer-permission-prompts`, a built-in Claude Code skill — not part of this kit).
 
 ## 7. Company-specific skills you may want to rebuild
 These weren't shipped (too specific), but the pattern is reusable — each is a `SKILL.md` that captures a workflow you re-derive constantly:
