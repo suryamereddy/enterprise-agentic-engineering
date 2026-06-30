@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0b0e14">
   <meta name="color-scheme" content="dark">
-  <title>Not Vibe Coding — Native AI Engineering (mobile)</title>
+  <title>Not Vibe Coding — Native AI Engineering (v4)</title>
   <style>
     :root{
       --bg:#0b0e14; --panel:#10141d; --panel2:#0d1117;
@@ -77,10 +77,12 @@
     .deck{flex:1 1 auto; position:relative; overflow:hidden;}
     .slab{
       position:absolute; inset:0; display:none;
-      flex-direction:column; justify-content:safe center;
+      flex-direction:column; align-items:center; justify-content:safe center;
       overflow-y:auto; -webkit-overflow-scrolling:touch;
       padding:1.5rem max(1.1rem, env(safe-area-inset-right)) 4.4rem max(1.1rem, env(safe-area-inset-left));
     }
+    /* the absolutely-positioned slide-number badge must NOT be centered as a column child */
+    .slab > .num{width:auto; max-width:none; margin:0;}
     .slab.active{display:flex; animation:slidein .28s ease both;}
     @keyframes slidein{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;}}
     @media (prefers-reduced-motion:reduce){ .slab.active{animation:none;} }
@@ -129,7 +131,7 @@
     /* big number */
     .bignum{
       font-family:var(--mono); font-weight:800; line-height:.95;
-      font-size:clamp(3rem, 14vw, 5.5rem); letter-spacing:-2px; margin:.1em 0;
+      font-size:clamp(3rem, 14vw, 5.5rem); letter-spacing:-2px; margin:.1em auto;
       background:linear-gradient(180deg,#eafff0, var(--green-bright));
       -webkit-background-clip:text; background-clip:text; color:transparent;
     }
@@ -145,7 +147,7 @@
     /* cue banners */
     .cue{
       font-family:var(--mono); font-size:.72rem; letter-spacing:.5px;
-      border-radius:10px; padding:.6em .8em; margin:.7em 0 .2em;
+      border-radius:10px; padding:.6em .8em; margin:.7em auto .2em;
       border:1px dashed; display:flex; flex-wrap:wrap; gap:.4em; align-items:center;
     }
     .cue.live{color:var(--green-bright); border-color:rgba(63,185,80,.6); background:rgba(63,185,80,.07);}
@@ -191,7 +193,7 @@
     .cmd .star{color:var(--amber);}
 
     /* harness flow — vertical on mobile, horizontal on wide */
-    .flow{display:flex; flex-direction:column; align-items:center; gap:.35em; margin:.8em 0;}
+    .flow{display:flex; flex-direction:column; align-items:center; gap:.35em; margin:.8em auto;}
     @media (min-width:620px){ .flow{flex-direction:row; flex-wrap:wrap; justify-content:center;} }
     .fbox{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:.6em .7em; font-size:.82rem; text-align:center; line-height:1.3; min-width:8em;}
     .fbox b{color:var(--cyan); display:block;}
@@ -229,6 +231,7 @@
   <header class="bar">
     <span class="brand">Not Vibe Coding<span class="author"> · <b>S. Mereddy</b></span></span>
     <span class="spacer"></span>
+    <button class="btn" id="fsBtn" title="Fullscreen (F)">⛶ Full screen</button>
     <button class="btn" id="studyBtn" aria-pressed="false">Speaker notes</button>
   </header>
   <div id="progress"></div>
@@ -241,7 +244,7 @@
       <span class="kicker">show &amp; tell · 20 months · production</span>
       <h1>Not Vibe Coding</h1>
       <p class="muted" style="font-weight:600; font-size:1.05rem; margin-top:-.1em;">20 Months of Native AI Engineering at Enterprise Scale</p>
-      <p class="mono small muted nudge">Surya Mereddy · enterprise engineer — .NET / Azure / Cosmos / Kafka / MuleSoft</p>
+      <p class="mono small muted nudge">Surya Mereddy · enterprise engineer</p>
       <p class="repo">github.com/suryamereddy/enterprise-agentic-engineering</p>
       <details class="notes"><summary>Speaker notes</summary><div class="body">HOLDING SLIDE — up as the room fills. Don't start talking to it. When you're ready, advance to the cold open and tell the silent-drop story from memory. Title is swappable: "Not Vibe Coding" (punchy) vs "The Moat Is the Harness, Not the Model".</div></details>
     </section>
@@ -249,27 +252,29 @@
     <!-- 1 · COLD OPEN -->
     <section class="slab dark" id="s1">
       <span class="num">01</span>
-      <span class="kicker red">live · terminal · cold open</span>
-      <p class="spine">A single sort clause silently <span class="hl">hid 99%</span> of a production queue. No error. No alert.</p>
-      <p class="muted">“…the kind of mistake that <em>looks completely correct</em> right up until it's a catastrophe. But first — the <strong>least</strong> impressive thing my AI setup does:”</p>
+      <span class="kicker red">cold open · the two most expensive words</span>
+      <p class="spine">“Looks perfect.” <span class="hl">The two most expensive words in software</span> — and the machine writing my code says them a hundred times a day.</p>
+      <p class="muted">“…flawlessly, confidently, and sometimes completely wrong. This whole talk is the system I built so I never have to take its word for it. But first — the <strong>least</strong> impressive thing my setup does:”</p>
       <div class="cue live"><b>⌨ LIVE DEMO #1</b> · ~40s · pre-commit hook blocks a fake API key</div>
-      <details class="notes"><summary>Speaker notes</summary><div class="body">⌨ COLD OPEN — fear → proof → scale. You + the terminal carry it.
+      <details class="notes"><summary>Speaker notes</summary><div class="body">⌨ COLD OPEN — provocation → proof → scale. You + the terminal carry it. Open COLD, no slide-reading; let the two words hang.
 
-SAY (verbatim): "A few months ago, a single sort clause I shipped silently HID ninety-nine percent of a production queue — one million, thirty-eight thousand documents — from the view that was supposed to process them. Nothing errored. No alert fired. The queue looked completely healthy and was quietly doing one percent of its job. It wasn't a typo, and it wasn't even AI's fault. It was the kind of mistake that LOOKS COMPLETELY CORRECT right up until it's a catastrophe. I'll come back to exactly how that happened. But first I want to show you the LEAST impressive thing my AI setup does —"
+SAY (verbatim, slow): "'Looks perfect.' [FULL BEAT — let it land] Those are the two most expensive words in software. And the machine I let write my code says them to me a hundred times a day — flawlessly, confidently, and sometimes completely wrong. This whole talk is the system I built so I never have to take its word for it. But first, the LEAST impressive thing my setup does —"
 
 ⌨ LIVE DEMO #1 (~40s): commit a FAKE-but-realistic API key → pre-commit hook BLOCKS it. "— it just refused to let me do something stupid. And it'll do that a thousand times before I ever notice."
 
-CRITICAL: never say "deleted/gone" — it was HID / silently excluded. SAFETY: clean profile, scrollback scrubbed, FAKE key only, never run /creds on stage. FALLBACK: recorded clip if the hook is slow.</div></details>
+WHY THIS OPENER: pure provocation — names the villain ("looks perfect") in one breath, no number to defend, survives any room, zero demo risk on the words themselves. The big war-stories (978,535-msg pipeline that did nothing; the 99% silent drop) now land in Beat 2 / CORRECT as the PAYOFF of these two words. OPTIONAL CHAIN: follow with the hand-raise — "Show of hands: who's shipped something green-and-passing that was still completely wrong?" SAFETY: clean profile, scrollback scrubbed, FAKE key only, never run /creds on stage. FALLBACK: recorded clip if the hook is slow.</div></details>
     </section>
 
     <!-- 2 · THE ONE NUMBER -->
     <section class="slab center" id="s2">
       <span class="num">02</span>
-      <div class="bignum">1,117</div>
-      <p class="mono" style="font-size:1.1rem;">AI sessions · 780 MB · 20 months</p>
-      <p class="muted nudge">This isn't a thread of prompts. It's an engineering practice.</p>
-      <p class="green mono small">…and it exists <em>because</em> of that ninety-nine percent.</p>
-      <details class="notes"><summary>Speaker notes</summary><div class="body">Reveal after the demo lands. THE one number you own all talk (don't mention "72 tracked"). Plants callback #2 ("1,117") — paid off at the /recall demo. Status: MEASURED (transcript count on the live machine).</div></details>
+      <div class="bignum">116,519</div>
+      <p class="mono" style="font-size:1.1rem;">AI actions · 619 subagents · 600 workflows directed</p>
+      <p class="muted nudge">…and that's just the <em>last 11 weeks</em> my machine kept on disk. This isn't a thread of prompts — it's an engineering practice.</p>
+      <p class="green mono small">…and it exists <em>because</em> the machine keeps saying “looks perfect.”</p>
+      <details class="notes"><summary>Speaker notes</summary><div class="body">Reveal after the demo lands. THE one number you own all talk. ALL MEASURED + independently reproduced 2026-06-30 (mined ~/.claude/projects, 1,254 files): 116,519 assistant-turn events (grep -rh '"type":"assistant"') · 619 subagent transcripts · 600 workflow runs · 35 deep top-level sessions · retained span Apr 13→Jun 30 (~11 weeks). ⚠️ DROPPED the "27,320 prompts" figure — it is NOT reproducible (raw type:user events = 73,914 but 68,409 of those are tool_results; non-tool-result user events = only 4,714). Do NOT put a human-prompt count on this slide until its filter is pinned; lead with AI actions + subagents/workflows, which ARE verified.
+
+⚠️ HARD CREDIBILITY RULE — the old "1,117 sessions / 20 months" line does NOT survive a skeptic: (a) the 1,254 files = 35 interactive sessions + 619 subagents + 600 workflow runs, NOT 1,254 "sessions"; (b) transcripts only go back ~11 weeks, so NEVER attach a count to "20 months." Say it cleanly: "These are MEASURED from just the last eleven weeks of logs on my laptop — a hundred-sixteen thousand AI actions, six hundred subagents and workflows I directed like a team." Use "20 months" ONLY as the practice/career framing, never welded to a file count. The 619-subagents + 600-workflows number IS the multi-agent thesis — lean on it. Callback #2 is now "every one of these," not a number. Re-mine the morning of the talk for fresh figures.</div></details>
     </section>
 
     <!-- 3 · TWO CAMPS + THESIS -->
@@ -284,7 +289,9 @@ CRITICAL: never say "deleted/gone" — it was HID / silently excluded. SAFETY: c
       <div class="takeaway"><span class="lbl">thesis</span>Native AI engineering = directing AI <em>like a team</em>, under invariants <em>you</em> enforce — so the output is production-grade, not just plausible.</div>
       <details class="notes"><summary>Speaker notes</summary><div class="body">30-sec who: enterprise engineer, trucking/logistics, 40+ microservices. Two camps — BOTH WRONG; what's missing is a field-tested operating model.
 
-ERA ARC compressed to ONE sentence: "I've been at this 20 months across more than a thousand sessions, and here's the punchline: the productivity didn't come from the model getting smarter — it came from ME building the protocols to direct it. That's the entire talk." Then reveal the thesis line.</div></details>
+SAY (the punchline, compressed): "I've spent twenty months building this way — and just the last eleven weeks of logs on my laptop hold over a hundred thousand AI actions and six hundred subagents I directed. But here's the real punchline: the productivity didn't come from the model getting smarter. It came from ME building the protocols to direct it. That's the entire talk." Then reveal the thesis line.
+
+⚠️ Keep "20 months" (career/practice) and the measured counts (last 11 weeks) as SEPARATE clauses — never weld a file-count to "20 months," or a skeptic kills it.</div></details>
     </section>
 
     <!-- 4 · THE NUMBERS -->
@@ -311,11 +318,13 @@ ERA ARC compressed to ONE sentence: "I've been at this 20 months across more tha
       <span class="kicker">the core · 18 minutes · 3 beats</span>
       <h2>Keeping AI honest across the lifecycle</h2>
       <div class="rule"></div>
-      <p class="spine">AI will hand you something that <span class="hl">looks perfect</span> and is <span class="hl">silently wrong</span> — so the job became building the system that makes it <span class="hl">prove it's right</span> before it ships.</p>
+      <p class="spine">So how do you make the machine prove it? Three beats — where you <span class="hl">build</span> it, where you <span class="hl">catch it lying</span>, and where you keep it honest <span class="hl">at 2am.</span></p>
       <div class="chips" style="justify-content:center;">
         <span class="chip"><b>1</b> BUILD</span><span class="chip"><b>2</b> CORRECT</span><span class="chip"><b>3</b> SHIP &amp; OPERATE</span>
       </div>
-      <details class="notes"><summary>Speaker notes</summary><div class="body">ONE arc with three beats — NOT three acts. The spine line is the sentence the whole talk is a verse of. 80/20 rule: every Werner proper-noun lands on a portable Commandment within 10 seconds.</div></details>
+      <details class="notes"><summary>Speaker notes</summary><div class="body">⚠️ Do NOT restate the thesis here — the opener ("Looks perfect…") already planted it. This slide's only job is the ROADMAP. SAY: "So how do you actually make a machine prove it's right? Three beats — where you build it, where you catch it lying, and where you keep it honest at 2am. One arc, not three acts." Then move.
+
+80/20 rule: every Werner proper-noun lands on a portable Commandment within 10 seconds — the audience keeps the lesson, not the jargon.</div></details>
     </section>
 
     <!-- 6 · BEAT 1 BUILD -->
@@ -323,13 +332,13 @@ ERA ARC compressed to ONE sentence: "I've been at this 20 months across more tha
       <span class="num">06</span>
       <span class="kicker">beat 1 · build — the highs</span>
       <ul>
-        <li><strong>Deep Onboarding</strong> — never modify code you haven't understood → AI writes an 8-doc mastery suite <em>first</em>. 15+ repos, repeatedly surfacing integration paths we'd never documented. <span class="muted">→ understand before you modify.</span></li>
-        <li><strong>The Middleware Killer</strong> <span class="mono muted tiny">(229 msgs)</span> — eliminated an entire middleware API layer via direct integration. <span class="muted">→ AI's leverage is comprehension, not typing.</span></li>
-        <li><strong>The Overnight Build</strong> <span class="mono muted tiny">(216 msgs)</span> — a yacht-charter SaaS from zero in one session. Then I caught a concurrent-booking race → had AI fix it <em>and</em> write a test for that bug class. <span class="muted">→ make AI write the test that catches its own bug class.</span></li>
+        <li><strong>Deep Onboarding</strong> — never modify code you haven't understood → AI writes an 8-doc mastery suite <em>first</em>. Run on a half-dozen of Werner's gnarliest repos, repeatedly surfacing integration paths we'd never documented. <span class="muted">→ understand before you modify.</span></li>
+        <li><strong>The Middleware Killer</strong> — eliminated an entire middleware API layer via direct integration. <span class="muted">→ AI's leverage is comprehension, not typing.</span></li>
+        <li><strong>The Charter Build</strong> <span class="mono muted tiny">(4,237 prompts · 2 months)</span> — a real, deployed booking app from zero. The lesson isn't speed — it's that double-booking is impossible <em>by design</em>: a Postgres no-overlap exclusion constraint enforces it <em>in the database</em>, where app code can't bypass it. <span class="muted">→ enforce invariants at the data layer, not in app logic that hopes.</span></li>
       </ul>
       <div class="cue live"><b>⌨ LIVE DEMO #2 — THE MARQUEE</b> · ~3 min · 3 reviewers argue on a real diff</div>
       <div class="takeaway"><span class="lbl">takeaway</span>AI output is a draft. The <em>team</em> reviews the draft.</div>
-      <details class="notes"><summary>Speaker notes</summary><div class="body">TRANSITION IN (from divider): "So how do I actually build this way? Three stories that changed everything." The Overnight Build is the smile beat — but it lands a lesson: AI is fast at scaffolding; you still own the race condition, and you make it write the test that locks the fix.
+      <details class="notes"><summary>Speaker notes</summary><div class="body">TRANSITION IN (from divider): "So how do I actually build this way? Three stories that changed everything." The Charter Build is the smile beat — but it lands a lesson: AI is fast at scaffolding; the durable win is that double-booking is PREVENTED BY DESIGN (a Postgres no-overlap exclusion constraint enforced in the DB). ⚠️ GROUND TRUTH (verified from transcripts + yacht docs): the yacht/"Derek" session ran Apr 21→Jun 24 — 4,237 prompts, 6,692 AI turns. It is NOT an "overnight" build; there was NO concurrent-booking race caught; and do NOT claim "wrote a test for the invariant" — the constraint is documented in the yacht docs but NO such test is. Drop all three claims. Frame it honestly as a sustained multi-week personal build. The old "216 msgs" label was unverifiable; real number is 4,237 prompts.
 
 ⌨ LIVE DEMO #2 (MARQUEE, ~3 min): spawn 3 INDEPENDENT reviewer agents in parallel — adversarial-reviewer + security-auditor + kafka-reviewer. They ARGUE; you keep the conclusions. "This is what 'multi-agent' actually means — not one chat. A team, with no shared context, trying to break the same code three different ways." SAFETY: pre-stage the canned diff; recorded run cued.</div></details>
     </section>
@@ -338,25 +347,28 @@ ERA ARC compressed to ONE sentence: "I've been at this 20 months across more tha
     <section class="slab" id="s7">
       <span class="num">07</span>
       <span class="kicker amber">beat 2 · correct — the fall, then the method</span>
-      <div class="card" style="border-color:rgba(227,179,65,.35);">
-        <span class="h amber">the humbling · 63 msgs · the vulnerability beat</span>
-        <p><strong style="color:var(--amber)">It compiled. Tests were green. It looked perfect.</strong> It was silently, subtly <span class="red">wrong</span> — the business logic had quietly changed.</p>
-        <p class="muted tiny">→ Revert-Prove-Rebuild: stash the AI change, prove the original, rebuild from source. Never trust output you haven't proven against reality.</p>
-      </div>
-      <div class="card nudge" style="border-color:rgba(248,81,73,.35);">
-        <span class="h red">the 99% — cold open, paid off</span>
-        <p>A sort on a sparse field <strong class="red">silently excluded 1,038,173 of 1,048,770 docs</strong> — 99% of a prod queue. <em>No error. It looked perfect.</em></p>
-        <p class="muted tiny">→ assume silent data loss until real row counts prove otherwise.</p>
-        <p class="green tiny"><strong>Fixed</strong> · all 1,038,173 docs re-appeared &amp; processed · now a <strong>row-count assertion guards every query in CI</strong> — caught 3 more since.</p>
+      <div class="grid g2">
+        <div class="card" style="border-color:rgba(248,81,73,.35);">
+          <span class="h red">the fall · “it looked perfect”</span>
+          <p class="small">It compiled. The tests were green. It looked perfect. Then I checked against real data: a sort on a field most rows didn't even have had <strong class="red">silently hidden 1,038,173 of 1,048,770 documents</strong> — 99% of a production queue. No error. No alert.</p>
+          <p class="muted tiny">→ assume silent data loss until real row counts prove otherwise.</p>
+        </div>
+        <div class="card" style="border-color:rgba(63,185,80,.4);">
+          <span class="h green">the catch · the system kept it honest</span>
+          <p class="small">Then the <em>fix</em> nearly shipped — and it was worse: it would have taken the <strong class="red">entire queue 100% offline</strong> and quietly stripped the repaired data back out. <strong>17 independent review agents</strong> caught it against live production data, and found a cheaper fix touching <strong>241 documents, not a million.</strong> Now a row-count check guards every query in CI.</p>
+          <p class="muted tiny">→ the moat isn't the model. It's the harness that won't let a plausible fix ship unproven.</p>
+        </div>
       </div>
       <div class="takeaway"><span class="lbl">takeaway · “looks perfect”</span>Unit tests prove consistency. Only <em>real data</em> proves correctness.</div>
-      <details class="notes"><summary>Speaker notes</summary><div class="body">TRANSITION IN: "So far so good, right? But then I learned the hard way why that team review matters." NO demo — telling beats showing. Place The Humbling at the PEAK of Beat 1's confidence; max contrast.
+      <details class="notes"><summary>Speaker notes</summary><div class="body">TRANSITION IN: "So far so good, right? But then I learned the hard way why that review matters." NO demo here — telling beats showing.
 
-SAY (99% payoff): "Remember the queue from the first thirty seconds? A sort on a field most documents didn't even have silently EXCLUDED 1,038,173 of 1,048,770 documents — 99% — from the prioritized view. No error. It looked perfect." NEVER say deleted/gone.
+SAY (the fall — pay off "looks perfect"): "Remember those two words? Here's the cheap version: a pipeline that compiled, passed its tests, green dashboards — replayed against 978,535 real messages, it caught nothing. And the expensive version, at a million-document scale: a sort silently HID 1,038,173 of 1,048,770 documents — 99% of a production queue. No error." NEVER say deleted/gone.
 
-CLOSE THE LOOP: "We fixed the sort, and verified all 1,038,173 docs re-appeared and processed. From that incident I added a rule: a row-count assertion on every query in CI — it's caught three more silent exclusions since."
+SAY (the catch — the on-thesis core): "Then the FIX for it nearly shipped — and it was worse: it would have taken the entire queue a hundred percent offline. What caught it wasn't me eyeballing a diff — it was 17 independent review agents checking against live production data, and they found a fix touching 241 documents instead of a million. The model didn't keep the fix honest. The system I built around it did."
 
-👋 HAND-RAISE (~20s, no demo risk): "How many of you have debugged a silent failure — the code was correct, the tests were green, nothing errored, but the work quietly didn't happen?" Wait for hands, nod, THEN land: "'Looks perfect' is the most expensive phrase in software. My entire harness exists so I never have to trust it again."</div></details>
+⚠️ FRAMING: the 99% drop itself wasn't strictly an AI bug (a flag-flip + a database footgun) — so don't sell it as "the AI mistake." Sell it as the silent-failure CLASS, and let the catch (the harness) be the point. (The Humbling / Revert-Prove-Rebuild and the CI row-count rule live on the backup methodologies slide if you want them in Q&A.)
+
+👋 HAND-RAISE (~20s, no demo risk): "How many of you have debugged a silent failure — code correct, tests green, nothing errored, but the work quietly didn't happen?" Wait for hands, nod, THEN land: "'Looks perfect' is the most expensive phrase in software. My entire harness exists so I never have to trust it again."</div></details>
     </section>
 
     <!-- 8 · BEAT 3 SHIP & OPERATE -->
@@ -365,21 +377,22 @@ CLOSE THE LOOP: "We fixed the sort, and verified all 1,038,173 docs re-appeared 
       <span class="kicker">beat 3 · ship &amp; operate — the grit nobody demos</span>
       <div class="grid g2">
         <div class="card">
-          <span class="h green">deploy · bre-edi</span>
-          <p class="small">SQLite→Cosmos migration that became a full infra stand-up: Pulumi · OIDC Phase 2 · JFrog · Okta · the bootstrap dance. Added a <strong>prod approval gate</strong> after catching prod deploy <em>unguarded</em>.</p>
-          <p class="muted tiny">= IaC + federated identity + artifact mgmt + hardened deploy gates — maps to any cloud / any auth.</p>
-          <p class="mono tiny green">1,122 fields · automated + 50-field manual spot-check · 38/38 E2E <span class="tag m">MEASURED</span></p>
-          <p class="muted tiny">→ one-click or it doesn't count.</p>
+          <span class="h green">ship · one-click or it doesn't count</span>
+          <p class="small">A database migration that turned into standing up the <strong>entire production stack</strong> — servers, identity, the deploy pipeline. I caught a deploy heading to prod with <strong>no approval gate</strong> and added one.</p>
+          <p class="mono tiny green">proven on 1,122 real prod cases · 0 mismatches · 38/38 E2E <span class="tag m">MEASURED</span></p>
+          <p class="muted tiny">→ if it isn't one command, it isn't shipped.</p>
         </div>
         <div class="card">
-          <span class="h cyan">operate · the 2am incident</span>
-          <p class="small">Topics-replicator “couldn't post.” Everyone blamed a firewall. It was a <strong>missing ACL on the key-owner service account</strong> — silent dead-air, no error.</p>
-          <p class="muted tiny">→ assume silent failure until the logs prove otherwise. DLQ everything · dry-run before live · hash before you process.</p>
+          <span class="h cyan">operate · 2am — assume silent failure</span>
+          <p class="small">A service “couldn't post.” Everyone blamed the firewall — it was a <strong>missing permission, failing silently</strong>, no error. And pricing <strong class="red">500'd on 92% of requests for 3 hours</strong> before a human noticed — both dashboards dark, so I pulled the logs off the server <strong>by hand.</strong></p>
+          <p class="muted tiny">→ assume silent failure until the logs prove otherwise. If a user beat your alert to it, the missing alert is part of the incident.</p>
         </div>
       </div>
       <div class="cue clip"><b>▶ RECORDED CLIP</b> · ~45s · <span class="mono">werner-new-app</span> → one command → ACA + Cosmos + KV + CI/CD + OIDC + every ticket filed</div>
       <div class="takeaway"><span class="lbl">takeaway</span>Native AI engineering covers the whole lifecycle — including 2am.</div>
       <details class="notes"><summary>Speaker notes</summary><div class="body">TRANSITION IN: "OK — we know how to build right and make it correct. The hard part is shipping it and operating it in the dark. Here's what 2am looks like." The half nobody demos; emotional note: competence under pressure.
+
+SECOND OPERATE STORY (phoenix, flying blind): "And here's what 2am actually feels like. Pricing was down — 92% of requests failing — for three HOURS before anyone noticed, because a user found it, not an alert. Both my monitoring stacks were dark at the same time. So I pulled the logs straight off the function's filesystem by hand, over Kudu, and found it: a rotated downstream credential. Lesson: know the fallback for when your dashboards are down too — and if a human beat your alerts to it, the missing alert IS part of the incident." (Source: phoenix-INCIDENT-2026-04-29; numbers verbatim.)
 
 ▶ RECORDED CLIP (~45s — longer on purpose so the room ABSORBS it): werner-new-app — one command scaffolds repo conventions, JFrog repos, Pulumi stacks, ACA+Cosmos+KV, CI/CD, OIDC, Okta + generates every CloudEng ticket. Let resources + tickets appear on screen, then: "One command. The whole infra, plus every ticket it needs filed." SAFETY: recorded/dry-run ONLY.</div></details>
     </section>
@@ -399,8 +412,9 @@ CLOSE THE LOOP: "We fixed the sort, and verified all 1,038,173 docs re-appeared 
       <span class="num">10</span>
       <span class="kicker">inventory · it's real and it's big</span>
       <div class="chips">
-        <span class="chip"><b>14</b> skills</span><span class="chip"><b>5</b> reviewer agents</span><span class="chip"><b>9</b> hooks</span>
-        <span class="chip"><b>56</b> memory files</span><span class="chip"><b>8</b> status files</span><span class="chip">mirrored <b>1:1</b> to Copilot</span>
+        <span class="chip"><b>15</b> skills</span><span class="chip"><b>5</b> reviewer agents</span><span class="chip"><b>9</b> hooks</span>
+        <span class="chip"><b>58</b> memory files</span><span class="chip"><b>8</b> status files</span><span class="chip">mirrored <b>1:1</b> to Copilot</span>
+        <span class="chip"><b>618</b> subagents spawned <span class="muted">(11 wks)</span></span>
       </div>
       <div class="grid g2 nudge">
         <div class="card"><span class="h">pillar 1</span><h4>Always-on principles</h4><p class="muted small">CLAUDE.md / copilot-instructions inject my non-negotiables into every session.</p></div>
@@ -411,12 +425,33 @@ CLOSE THE LOOP: "We fixed the sort, and verified all 1,038,173 docs re-appeared 
       <div class="cue live"><b>⌨ LIVE DEMO #3 — THE CLOSER</b> · ~90s · lowest risk · <span class="mono">/recall hvf</span></div>
       <details class="notes"><summary>Speaker notes</summary><div class="body">Inventory = flash for 5s (proof it's real and big — don't recite). The 4 pillars are the transferable architecture; narrate over them. If asked "tool-locked to Claude?" → the skills are Claude/Copilot syntax, but the ARCHITECTURE runs on any model (see backup slides).
 
-⌨ LIVE DEMO #3 (CLOSER, ~90s, LOWEST RISK — local, no network): /recall hvf → AI surfaces the 99% landmine AND current rollout status. PAY OFF callback #2: "My AI remembers all 1,117 sessions. Yours forgets every single one — unless you build this." If it dies, cut straight to the close, zero damage.</div></details>
+⌨ LIVE DEMO #3 (CLOSER, ~90s, LOWEST RISK — local, no network): /recall hvf → AI surfaces the 99% landmine AND current rollout status. PAY OFF callback #2: "My AI remembers every one of those sessions — 116,519 actions of context. Yours forgets every single one — unless you build this." If it dies, cut straight to the close, zero damage.</div></details>
     </section>
 
-    <!-- 11 · ECONOMICS -->
-    <section class="slab center" id="s11">
+    <!-- 11 · HARNESS LOOP (promoted from backup, after the inventory/pillars slide) -->
+    <section class="slab" id="s10b">
       <span class="num">11</span>
+      <span class="kicker cyan">the moat · how the pillars connect</span>
+      <h3>The harness is a loop, not a checklist</h3>
+      <div class="flow">
+        <div class="fbox">Always-on<b>Principles</b></div>
+        <div class="farrow"></div>
+        <div class="fbox">Deterministic<b>Hooks</b></div>
+        <div class="farrow"></div>
+        <div class="fbox">Memory +<b>Status</b></div>
+        <div class="farrow"></div>
+        <div class="fbox">Scaled<b>Review Gate</b></div>
+        <div class="farrow"></div>
+        <div class="fbox done">Production<b>Code</b></div>
+      </div>
+      <p class="center muted small">↑ every prod incident feeds back → a new principle → a new hook → a new memory entry → a tighter gate ↑</p>
+      <p class="center tiny muted">Adopt it piecemeal — each pillar stands alone; the loop is what compounds. Works on any model.</p>
+      <details class="notes"><summary>Speaker notes</summary><div class="body">Place RIGHT AFTER the inventory/4-pillars slide: "Those four pillars aren't a checklist — they're a loop. Every production incident feeds back into a new principle, a new hook, a new memory entry, a tighter gate. That's why month six looks nothing like month one — the harness compounds from every scar. Adopt it piecemeal; each pillar stands alone, but the loop is the moat. And it runs on any model."</div></details>
+    </section>
+
+    <!-- 12 · ECONOMICS -->
+    <section class="slab center" id="s11">
+      <span class="num">12</span>
       <span class="kicker amber">the honest money slide</span>
       <p style="margin:.4em 0;"><span class="bignum sm">~$1k</span> <span class="muted mono">/mo</span> <span class="muted mono">→</span> <span class="bignum sm cyan">4–6k</span> <span class="muted mono">hrs replaced</span></p>
       <p class="muted small">12+ apps · 3 middleware layers gone · <span class="tag e">ESTIMATE</span> on both headline figures</p>
@@ -425,38 +460,46 @@ CLOSE THE LOOP: "We fixed the sort, and verified all 1,038,173 docs re-appeared 
         <p class="small">Bottom-up token→dollar estimates <em>overshoot</em> — caching skews them. I trust the <strong>billing API</strong>, not the math. I measured it.</p>
       </div>
       <p class="green nudge small">“The cheapest senior engineer Werner ever hired — and it's the one I already was, amplified.”</p>
-      <details class="notes"><summary>Speaker notes</summary><div class="body">Both headline figures are ESTIMATES — say so. The caveat is the credibility move: token math overshoots (caching), trust the billing API. Then: "cheapest senior engineer… the one I already was, amplified."</div></details>
+      <details class="notes"><summary>Speaker notes</summary><div class="body">SAY: "Two numbers I owe you from the start — roughly a thousand dollars a month of AI spend, replacing four to six thousand hours of manual work. Both are ESTIMATES, and I'll tell you exactly why."
+
+THE CAVEAT (the credibility move — say it OUT LOUD): "Bottom-up token-to-dollar math OVERSHOOTS, because caching skews it. So I don't trust the math — I trust the billing API. I measured it."
+
+LAND IT: "It's the cheapest senior engineer Werner ever hired — and it's the one I already was, amplified."
+
+⚠️ Saying the caveat yourself is what makes the number believable — never present the ROI as precise. If you wire up the real billing figure before the talk, swap it in here.</div></details>
     </section>
 
-    <!-- 12 · 11 COMMANDMENTS -->
+    <!-- 13 · THE 5 COMMANDMENTS -->
     <section class="slab" id="s12">
-      <span class="num">12</span>
+      <span class="num">13</span>
       <span class="kicker">photograph this slide</span>
-      <h3>The 11 Commandments</h3>
-      <div class="cmd">
-        <div><span class="n">1</span><span class="star">★</span> Deep Onboard First</div>
-        <div><span class="n">2</span><span class="star">★</span> Trust but Verify</div>
-        <div><span class="n">3</span> Review Your Own Code (5+ rounds)</div>
-        <div><span class="n">4</span> Never Double-Retry</div>
-        <div><span class="n">5</span> Document as You Build</div>
-        <div><span class="n">6</span><span class="star">★</span> One-Click or It Doesn't Count</div>
-        <div><span class="n">7</span> DLQ Everything</div>
-        <div><span class="n">8</span> Hash Before You Process</div>
-        <div><span class="n">9</span> Dry-Run Before Live</div>
-        <div><span class="n">10</span> Pin Your Dependencies</div>
-        <div><span class="n">11</span> Never Commit a Secret</div>
+      <h3>The 5 Commandments</h3>
+      <div class="cmd" style="columns:1; font-size:1.15rem; line-height:2.2;">
+        <div><span class="n">1</span><span class="star">★</span> Prove It Against Real Data <span class="muted">— never trust "looks perfect"</span></div>
+        <div><span class="n">2</span><span class="star">★</span> Deep Onboard First <span class="muted">— understand before you modify</span></div>
+        <div><span class="n">3</span><span class="star">★</span> Review Scaled to the Change <span class="muted">— independent &amp; adversarial</span></div>
+        <div><span class="n">4</span><span class="star">★</span> One-Click or It Doesn't Count</div>
+        <div><span class="n">5</span><span class="star">★</span> DLQ Everything <span class="muted">— assume silent failure</span></div>
       </div>
-      <p class="muted small nudge">Read three out loud: <span class="green">Deep Onboard First · Trust but Verify · One-Click or It Doesn't Count.</span></p>
-      <details class="notes"><summary>Speaker notes</summary><div class="body">Tell them to photograph it. Read the three starred ones. Then go to the close.</div></details>
+      <p class="muted small nudge">Five rules — the rest are details. <span class="green">Photograph this slide.</span></p>
+      <figure style="margin:1rem auto 0;text-align:center;">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkwAAAJMAQMAAAAyqmuAAAAABlBMVEULHzr///+yOHeIAAADi0lEQVR42u2dS47cMAxEiVzA97+lbqB82qaqKM8ikrIY5BmDRrfHfgsBBZLiR9FPXS1AgQIFChSo74iKvK4H/rl/ffnw57/+4o84doEC9f+gTGsfWf3SWorxvpOKex4oIkWDoEBtavDWl3656v3f2sy3Wn0RDYICdUyD6pe25xn5vO9faBAUqH+gwT/S+ziZ6Xym7bsf6C92Ew2CAnUqHkwLaKK7LGAcYSDxIChQ+xoU//Pv/sxxZdlBgVrUYE1ANPE8I4YFTKv3/iLLDgrUugbvMFDiPosK1UF9Hk61Phs1LDsoUBvxoKTmS45eP1OGqUFRJcsOCtSGHcz0n2bhm+cj1AJ2M4toEBSoTTs4CmPC1DfqZJ7AUKtoRt4QDYICdcoOxggGh//ZuyYjNH0v8SPLDgrUugbNsXyUVUpGhwVs1VlFg6BAbfmiYUWhI/swxYARtZ8i30WDoECt28EmBrEPR1QT8ZmqeN/AITcBCtSeHay1Z2EpQu2YGGWlNUJk2UGBWtXg5dss3jyoOzM1HuzUi4ICdWZPpibie83aa82M9dqTmwAF6ogGw1ISY9eleb2o5iNqjQ3LDgrU+p7MXBf6cpW5Fu7NokFQoA7YQTGIo6NwystnayF7MqBAndqTsXyEZuT71CoYUWZZoEFQoPY1aEMq8n56p/2lkTDvo0FQoA7YQVefJiNGMOh13dPzLDsoUOvxYEnHa1uE/qwjZehdAgXqiB0Uh7NMdrotoDxZpYcGQYHat4MtwjsjzPaJiRxDZjJUbNSLggJ1RoM6XDRkmmhpqbC8PDOdQIE6tSfTPDYMP1HCnc/Scf8YRJYdFKh1O2gbnt4ToYPuR1TYPE5Eg6BAbWpwUmLplZj90uKgokFQoNY12C0A9Kmh0yEvXksz6tbQIChQe75oeG2MfdFq7TJUjfmioECdsIO1JEZr2KIeyfTFF5YdFKh1O/gRWpmkHXPBzFRQSn4QFKh9DWpasNrBvLRLogwjZU8GFKgTvuhrPmKeYmFn1lvnL8sOCtSqHXRjV6fZe2eTnspE/yAoUMd80SK3NnULzudQXGYu0SAoUDsaVFnpDG3rE2w1Ksz7aBAUqIMatJ0WPx5UK0sn75RlBwXqgAZf2pS8mUL3Ub3ZkGUHBepAPKiT0+q40WaJ+3pQBRoEBWpZgyGuZmmWf/NRVZXBvigoUNsaPHM1UKBAgQIF6tuhfgK1ArQar5wdmAAAAABJRU5ErkJggg==" alt="QR code to https://github.com/suryamereddy/enterprise-agentic-engineering" style="width:160px;height:160px;background:#fff;padding:10px;border-radius:10px;display:block;margin:0 auto;">
+        <figcaption class="muted small" style="margin-top:.45rem;letter-spacing:.04em;">…or scan → the repo</figcaption>
+      </figure>
+      <details class="notes"><summary>Speaker notes</summary><div class="body">Tell them to photograph it, then read all five — they're the whole talk in five lines. #1 IS the thesis (never trust "looks perfect" — prove it against real data). #3 corrected from the old "5+ rounds" to "scaled to the change" (0–1 reviewer for trivial diffs, up to 3 for large/risky), matching how I actually work. The other six original rules (Never Double-Retry, Document as You Build, Hash Before You Process, Dry-Run Before Live, Pin Your Dependencies, Never Commit a Secret) live on the backup "methodologies" slide for Q&A. Then go to the close.</div></details>
     </section>
 
-    <!-- 13 · CLOSE -->
+    <!-- 14 · CLOSE -->
     <section class="slab divider center" id="s13">
-      <span class="num">13</span>
+      <span class="num">14</span>
       <span class="kicker">the close</span>
       <p class="spine" style="font-size:1.45rem;">AI didn't replace the engineer — it demanded a <span class="hl">better one</span>: the one who builds the system that makes AI <span class="hl">prove it's right.</span></p>
       <p class="nudge">Don't clone my code. <strong>Clone the discipline.</strong></p>
       <p class="repo">github.com/suryamereddy/enterprise-agentic-engineering</p>
+      <figure style="margin:1.3rem auto 0;text-align:center;">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkwAAAJMAQMAAAAyqmuAAAAABlBMVEULHzr///+yOHeIAAADi0lEQVR42u2dS47cMAxEiVzA97+lbqB82qaqKM8ikrIY5BmDRrfHfgsBBZLiR9FPXS1AgQIFChSo74iKvK4H/rl/ffnw57/+4o84doEC9f+gTGsfWf3SWorxvpOKex4oIkWDoEBtavDWl3656v3f2sy3Wn0RDYICdUyD6pe25xn5vO9faBAUqH+gwT/S+ziZ6Xym7bsf6C92Ew2CAnUqHkwLaKK7LGAcYSDxIChQ+xoU//Pv/sxxZdlBgVrUYE1ANPE8I4YFTKv3/iLLDgrUugbvMFDiPosK1UF9Hk61Phs1LDsoUBvxoKTmS45eP1OGqUFRJcsOCtSGHcz0n2bhm+cj1AJ2M4toEBSoTTs4CmPC1DfqZJ7AUKtoRt4QDYICdcoOxggGh//ZuyYjNH0v8SPLDgrUugbNsXyUVUpGhwVs1VlFg6BAbfmiYUWhI/swxYARtZ8i30WDoECt28EmBrEPR1QT8ZmqeN/AITcBCtSeHay1Z2EpQu2YGGWlNUJk2UGBWtXg5dss3jyoOzM1HuzUi4ICdWZPpibie83aa82M9dqTmwAF6ogGw1ISY9eleb2o5iNqjQ3LDgrU+p7MXBf6cpW5Fu7NokFQoA7YQTGIo6NwystnayF7MqBAndqTsXyEZuT71CoYUWZZoEFQoPY1aEMq8n56p/2lkTDvo0FQoA7YQVefJiNGMOh13dPzLDsoUOvxYEnHa1uE/qwjZehdAgXqiB0Uh7NMdrotoDxZpYcGQYHat4MtwjsjzPaJiRxDZjJUbNSLggJ1RoM6XDRkmmhpqbC8PDOdQIE6tSfTPDYMP1HCnc/Scf8YRJYdFKh1O2gbnt4ToYPuR1TYPE5Eg6BAbWpwUmLplZj90uKgokFQoNY12C0A9Kmh0yEvXksz6tbQIChQe75oeG2MfdFq7TJUjfmioECdsIO1JEZr2KIeyfTFF5YdFKh1O/gRWpmkHXPBzFRQSn4QFKh9DWpasNrBvLRLogwjZU8GFKgTvuhrPmKeYmFn1lvnL8sOCtSqHXRjV6fZe2eTnspE/yAoUMd80SK3NnULzudQXGYu0SAoUDsaVFnpDG3rE2w1Ksz7aBAUqIMatJ0WPx5UK0sn75RlBwXqgAZf2pS8mUL3Ub3ZkGUHBepAPKiT0+q40WaJ+3pQBRoEBWpZgyGuZmmWf/NRVZXBvigoUNsaPHM1UKBAgQIF6tuhfgK1ArQar5wdmAAAAABJRU5ErkJggg==" alt="QR code to https://github.com/suryamereddy/enterprise-agentic-engineering" style="width:160px;height:160px;background:#fff;padding:10px;border-radius:10px;display:block;margin:0 auto;">
+        <figcaption class="muted small" style="margin-top:.45rem;letter-spacing:.04em;">scan → clone the repo</figcaption>
+      </figure>
       <details class="notes"><summary>Speaker notes</summary><div class="body">MIC-DROP — deliver in SHORT beats, pause at every |:
 "Twenty months ago I thought AI might replace the engineer. | What it actually did was refuse to let me be a worse one. | It demanded somebody who builds the system that makes the machine prove it's right. | Every single time. | Before anything reaches a customer. | The model is the engine. | You are the one who builds the thing that keeps it honest. | Don't clone my code — clone the discipline."
 
@@ -478,11 +521,13 @@ Hallway line: "AI didn't replace the engineer — it demanded a better one: the 
       <div class="grid g2">
         <div class="card">
           <span class="h green">measured</span>
-          <p class="tiny">1,117 sessions · 780 MB · 20 mo</p>
+          <p class="tiny">116,519 AI actions · 11 wks of logs (Apr 13–Jun 30) · human-prompt count dropped (not reproducible)</p>
+          <p class="tiny">1,254 transcript files = 35 deep sessions + 619 subagents + 600 wf runs</p>
+          <p class="tiny">905 MB on disk · biggest session: 27,639 AI turns (bp-egress, 2+ mo)</p>
           <p class="tiny">99% exclusion = 1,038,173 / 1,048,770 docs hidden</p>
-          <p class="tiny">1,122/1,122 parity ×3 · 38/38 E2E (bre-edi)</p>
-          <p class="tiny">14 skills · 5 agents · 9 hooks · 56 memory · 8 status</p>
-          <p class="tiny">PR #5 merged 2026-06-18</p>
+          <p class="tiny">1,122 prod cases · 0 field mismatches · 38/38 E2E (bre-edi)</p>
+          <p class="tiny">hvf fix review = 17 agents · cheaper fix = 241 vs 1M docs</p>
+          <p class="tiny">15 skills · 5 agents · 9 hooks · 57 memory · 8 status</p>
         </div>
         <div class="card">
           <span class="h amber">estimate / rounded</span>
@@ -492,6 +537,7 @@ Hallway line: "AI didn't replace the engineer — it demanded a better one: the 
         </div>
       </div>
       <p class="muted tiny nudge">Correction baked in: the 99% queue docs were <strong>hidden / silently excluded</strong> from the prioritized view — <span class="amber">never deleted.</span></p>
+      <details class="notes"><summary>Speaker notes</summary><div class="body">Q&A credibility slide — pull it up if anyone challenges a number. The line that wins the room: "Everything in the left column I can pull from a log right now; the two on the right are honest estimates and I've labeled them as such." ⚠️ The 1,254 files are NOT 1,254 "sessions" — say "35 deep sessions plus 619 subagents plus 600 workflow runs." And the 99% docs were HIDDEN / silently excluded, never deleted.</div></details>
     </section>
 
     <!-- BACKUP · 6 methodologies -->
@@ -501,7 +547,7 @@ Hallway line: "AI didn't replace the engineer — it demanded a better one: the 
       <h3>6 methodologies</h3>
       <div class="grid g3">
         <div class="card"><h4>Deep Onboarding</h4><p class="muted tiny">understand before you modify → 8-doc mastery suite</p></div>
-        <div class="card"><h4>Build-Review-Iterate</h4><p class="muted tiny">AI re-tasked as its own reviewer, 5+ rounds</p></div>
+        <div class="card"><h4>Build-Review-Iterate</h4><p class="muted tiny">AI re-tasked as its own reviewer, scaled to the change</p></div>
         <div class="card"><h4>Revert-Prove-Rebuild</h4><p class="muted tiny">prove the original before trusting the change</p></div>
         <div class="card"><h4>Multi-Agent Orchestration</h4><p class="muted tiny">parallel independent / sequential dependent</p></div>
         <div class="card"><h4>Docs as Deliverable</h4><p class="muted tiny">diagrams + runbooks are outputs (~5% of time)</p></div>
@@ -516,7 +562,7 @@ Hallway line: "AI didn't replace the engineer — it demanded a better one: the 
       <div class="grid g2">
         <div class="card">
           <span class="h">other case studies</span>
-          <p class="tiny">The Colossus (342 msgs — birthed deep-onboarding)</p>
+          <p class="tiny">The Colossus — the deep session that birthed deep-onboarding</p>
           <p class="tiny">The Backlog Slayer (850K backlog → SHA-256 delta → 78% reduction)</p>
           <p class="tiny">The Pipeline Fortress (5 rounds caught 45+ issues)</p>
           <p class="tiny">The Guardrail Suite (122 tests · 4,921 lines)</p>
@@ -529,26 +575,31 @@ Hallway line: "AI didn't replace the engineer — it demanded a better one: the 
           <p class="tiny">hvf — the 99% landmine · finance/esker · pricing · yacht</p>
         </div>
       </div>
+      <details class="notes"><summary>Speaker notes</summary><div class="body">Q&A receipts. Left = portfolio case studies; right = the live day-job systems behind the stories. ⚠️ Pipeline Fortress "5 rounds / 45+ issues" and Guardrail "122 tests / 4,921 lines" are real from the docs, but predate the "review scaled to the change" principle — cite them as examples, don't generalize "always 5 rounds." Use this slide only if someone wants a second concrete example beyond hvf/datasync.</div></details>
     </section>
 
-    <!-- BACKUP · harness architecture loop -->
+    <!-- BACKUP · why it works for enterprise -->
     <section class="slab" id="b4">
       <span class="num">B4</span>
-      <span class="kicker cyan">backup · how the pillars connect</span>
-      <h3>The harness is a loop, not a checklist</h3>
-      <div class="flow">
-        <div class="fbox">Always-on<b>Principles</b></div>
-        <div class="farrow"></div>
-        <div class="fbox">Deterministic<b>Hooks</b></div>
-        <div class="farrow"></div>
-        <div class="fbox">Memory +<b>Status</b></div>
-        <div class="farrow"></div>
-        <div class="fbox">Scaled<b>Review Gate</b></div>
-        <div class="farrow"></div>
-        <div class="fbox done">Production<b>Code</b></div>
+      <span class="kicker cyan">backup · why this holds up in an enterprise</span>
+      <h3>Not a chatbot config — a control plane</h3>
+      <p class="muted small">Governed the way enterprise code is governed: nothing ships on trust, everything ships on proof. <span class="mono tiny">(live: 15 skills · 5 reviewer agents · 9 hooks · 57 memory · 8 status · 619 subagents in 11 wks)</span></p>
+      <div class="grid g3 nudge">
+        <div class="card">
+          <span class="h green">1 · safety scaled to blast radius</span>
+          <p class="small">Prod data, secrets, and artifact security are gated by <strong>code that always runs</strong> — not the model's judgment. A deny-list blocks <span class="mono tiny">*prod* DELETE/DROP/UPDATE</span>; secrets hit <strong>two independent guards</strong> (PreToolUse hook + git pre-commit).</p>
+        </div>
+        <div class="card">
+          <span class="h cyan">2 · a transferable operating model</span>
+          <p class="small">Mirrored <strong>1:1 to Copilot</strong>, runs on any model, adopt piecemeal. The moat is the <em>architecture</em>, not my prompts — drop in the hooks day one, add a review gate week two.</p>
+        </div>
+        <div class="card">
+          <span class="h amber">3 · governance the org already speaks</span>
+          <p class="small"><strong>Separation of duties</strong> (independent review agents) · <strong>least privilege</strong> (permission deny/ask lists) · <strong>audit trail</strong> (every change planned + proven on real data) · <strong>change control</strong> (no prod-flag flips, no force-push without a human).</p>
+        </div>
       </div>
-      <p class="center muted small">↑ every prod incident feeds back → a new principle → a new hook → a new memory entry → a tighter gate ↑</p>
-      <p class="center tiny muted">Adopt it piecemeal — each pillar stands alone; the loop is what compounds. Works on any model.</p>
+      <div class="takeaway"><span class="lbl">why it works</span>It maps onto the controls security &amp; compliance already require — so it's <em>defensible</em>, not just fast.</div>
+      <details class="notes"><summary>Speaker notes</summary><div class="body">Q&A / deep-dive slide. The killer detail for a security-minded room: the SECRET DOUBLE-GUARD (PreToolUse hook AND a git-layer pre-commit with secret-patterns.txt — belt and suspenders). The framing that lands with leadership: "I didn't make AI safe by hoping it behaves — I made the dangerous things structurally impossible and the safe things friction-free. That's least privilege, separation of duties, and change control — the exact controls you already audit for." Live counts verified 2026-06-30 from ~/.claude.</div></details>
     </section>
 
     <!-- BACKUP · start Monday -->
@@ -557,12 +608,13 @@ Hallway line: "AI didn't replace the engineer — it demanded a better one: the 
       <span class="kicker">backup · how to steal this on Monday</span>
       <h3>From zero to your first gate in a week</h3>
       <div class="grid g2">
-        <div class="card"><span class="h green">day 1</span><p class="small">Read the 11 Commandments + the 4-pillar loop. Fork the public repo.</p></div>
+        <div class="card"><span class="h green">day 1</span><p class="small">Read the 5 Commandments + the 4-pillar loop. Fork the public repo.</p></div>
         <div class="card"><span class="h green">day 2–3</span><p class="small">Drop the harness into your env (~30 min). Rewrite the principles file for <em>your</em> team's non-negotiables.</p></div>
         <div class="card"><span class="h green">day 4–5</span><p class="small">Run deep-onboarding on ONE repo; spot-check the mastery-suite output against reality.</p></div>
         <div class="card"><span class="h green">week 2</span><p class="small">Add your first scaled review gate; watch it catch the first real issue — and the first false positive.</p></div>
       </div>
       <p class="center muted small nudge">Tool-agnostic: the skills are Claude/Copilot syntax; the <em>architecture</em> runs on any model.</p>
+      <details class="notes"><summary>Speaker notes</summary><div class="body">Q&A — the "what do I do Monday" answer. Emphasize PIECEMEAL adoption: you don't need the whole harness. Day one, drop in the deterministic hooks (that's the secret-block you saw). Rewrite the principles file for your team. Run deep-onboarding on one repo. Then add your first scaled review gate. The week-two win is watching it catch BOTH a real issue AND a false positive — that's how you learn to size the gate.</div></details>
     </section>
 
     <!-- BACKUP · demo runbook -->
@@ -636,12 +688,26 @@ Hallway line: "AI didn't replace the engineer — it demanded a better one: the 
     nextBtn.addEventListener('click', next);
 
     // keyboard (desktop / presenter clicker)
+    // ---- fullscreen toggle (button + F key) ----
+    function toggleFs(){
+      var d = document;
+      if(!d.fullscreenElement && !d.webkitFullscreenElement){
+        var el = d.documentElement;
+        (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+      } else {
+        (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+      }
+    }
+    var fsBtn = document.getElementById('fsBtn');
+    if(fsBtn) fsBtn.addEventListener('click', toggleFs);
+
     document.addEventListener('keydown', function(e){
       if(e.metaKey||e.ctrlKey||e.altKey) return;
       if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){ next(); e.preventDefault(); }
       else if(e.key==='ArrowLeft'||e.key==='PageUp'){ prev(); e.preventDefault(); }
       else if(e.key==='Home'){ show(0); }
       else if(e.key==='End'){ show(n-1); }
+      else if(e.key==='f'||e.key==='F'){ toggleFs(); e.preventDefault(); }
     });
 
     // touch swipe (horizontal) — doesn't block vertical scroll inside a tall slide
