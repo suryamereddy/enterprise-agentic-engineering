@@ -394,4 +394,4 @@ Context: [BRIEF_DESCRIPTION_OF_WHAT_WE'RE_WORKING_ON]
 
 ---
 
-*These prompts are extracted from 72 production development sessions. They work because they encode specific failure modes and their solutions, not generic advice.*
+*These prompts are extracted from 20 months of production development sessions (72 of them deeply analyzed). They work because they encode specific failure modes and their solutions, not generic advice.*

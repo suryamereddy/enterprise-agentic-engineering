@@ -17,7 +17,7 @@ Everyone is talking about AI coding. Almost nobody has **20 months of production
 | "AI will replace developers" | "AI is a force multiplier — but only with structure" |
 | "Just vibe code it" | "Session 30 proved that vibe coding fails in enterprise. Here's the data." |
 | "Use AI to move fast" | "Moving fast without methodology cost us a full week. Revert-Prove-Rebuild saved us." |
-| "Here are 10 AI tips" | "Here are 72 sessions of production data showing what actually works" |
+| "Here are 10 AI tips" | "Here are 1,117 sessions of production data showing what actually works" |
 | Theory and speculation | Battle-tested framework with case studies |
 
 ### Voice & Tone
@@ -33,7 +33,7 @@ Everyone is talking about AI coding. Almost nobody has **20 months of production
 Use these consistently to build recognition:
 - "This is not vibe coding."
 - "Trust but verify — AI output is a draft, not gospel."
-- "72 sessions. 2,938 interactions. 40+ production services. Here's what I learned."
+- "1,117 AI sessions over 20 months. 40+ production services. Here's what I learned."
 - "The AI didn't fail. The methodology did."
 - "Deep Onboarding before you touch a single line."
 - "5 review rounds or it doesn't ship."
@@ -101,7 +101,7 @@ Before posting a single piece of content:
 
 **LinkedIn Profile:**
 - Headline: `Engineering Leader | Built 40+ AI-Assisted Production Services | "This Is Not Vibe Coding" | Enterprise Agentic Engineering`
-- Banner: Simple design with "72 Sessions. 2,938 AI Interactions. 40+ Production Services. This Is Not Vibe Coding."
+- Banner: Simple design with "1,117 Sessions. 20 Months. 40+ Production Services. This Is Not Vibe Coding."
 - About: 3-paragraph version of your manifesto (problem → your journey → the framework)
 - Featured: Pin the GitHub repo, your best 3 posts, and the manifesto article
 
@@ -118,9 +118,9 @@ Before posting a single piece of content:
 | Day | Platform | Pillar | Content | Hook |
 |-----|----------|--------|---------|------|
 | Mon | LinkedIn | Anti-Hype | **THE LAUNCH POST**: "I've spent 20 months using AI to build 40+ production services. I tracked every session. Every interaction. Every failure. Here's what nobody tells you: the AI isn't the problem. We are." [Link to repo] | Personal story, vulnerability, data |
-| Mon | X | Anti-Hype | Thread: "I tracked 72 AI coding sessions over 20 months. 2,938 interactions. 40+ production services. Here's the truth nobody in the AI hype machine wants you to hear: 🧵" (8-10 tweets summarizing the manifesto) | Launch thread — pin this |
+| Mon | X | Anti-Hype | Thread: "I tracked 1,117 AI coding sessions over 20 months. 40+ production services. Here's the truth nobody in the AI hype machine wants you to hear: 🧵" (8-10 tweets summarizing the manifesto) | Launch thread — pin this |
 | Tue | LinkedIn | Evidence | "In Session 30, I let the AI run. I trusted its output. I shipped without deep review. It cost me a full week of rework. That failure birthed a methodology that has since powered 40+ production services. Here's what I learned about the difference between 'vibe coding' and engineering." | Failure-first storytelling |
-| Tue | X | Anti-Hype | "Hot take: Most developers using AI are vibe coding and don't know it. The difference between vibe coding and AI-assisted engineering? A methodology. I built one over 72 production sessions. It's free. [link]" | Spicy take + value |
+| Tue | X | Anti-Hype | "Hot take: Most developers using AI are vibe coding and don't know it. The difference between vibe coding and AI-assisted engineering? A methodology. I built one over 20 months and 1,117 production sessions. It's free. [link]" | Spicy take + value |
 | Thu | LinkedIn | Framework | "The 10 Commandments of AI-Assisted Enterprise Development. (Earned over 20 months and 2,938 AI interactions.)" — List all 10 as a formatted post with brief explanation of each | List format = high save rate |
 | Thu | X | Framework | Carousel-style thread: one tweet per commandment, each with a one-line story | Thread format |
 | Fri | LinkedIn | Toolkit | "I just open-sourced the complete framework I use to build production software with AI: 10 Copilot agents, 8 Claude agents, 6 methodology docs, prompt templates. Everything. For free." [Repo link + screenshot of file tree] | Generosity play — link to repo |
@@ -136,7 +136,7 @@ Before posting a single piece of content:
 |-----|----------|--------|---------|------|
 | Mon | LinkedIn | Framework | **Deep Onboarding**: "Before I let AI touch a single line of code, I make it read every file. Every function. Every integration point. I call it Deep Onboarding, and it's the single most important practice I've discovered in 20 months of AI-assisted development. Here's exactly how it works..." | Practice #1 deep-dive |
 | Mon | X | Framework | "The #1 mistake developers make with AI: skipping comprehension. You wouldn't let a new hire push code on day 1 without understanding the codebase. Why do you let AI? Deep Onboarding first. Always." | Punchy restatement |
-| Tue | LinkedIn | Anti-Hype | "Everyone talks about AI productivity. Nobody talks about AI failures. In 72 sessions, I cataloged 16 anti-patterns that consistently destroy AI-assisted development quality. The deadliest? 'Blind Conversion' — letting AI rewrite code without understanding the original." | Anti-pattern reveal |
+| Tue | LinkedIn | Anti-Hype | "Everyone talks about AI productivity. Nobody talks about AI failures. Across 20 months and 1,117 sessions, I cataloged 16 anti-patterns that consistently destroy AI-assisted development quality. The deadliest? 'Blind Conversion' — letting AI rewrite code without understanding the original." | Anti-pattern reveal |
 | Tue | X | Anti-Hype | "16 ways AI-assisted development fails in enterprise. I documented every one. The worst: developers who let AI rewrite code without understanding it first. It has a name: Blind Conversion. And it will cost you." | Fear + curiosity |
 | Thu | LinkedIn | Framework | **Build-Review-Iterate**: "Here's the process I follow for every feature: Build → 5-Round Review → Fix → Review Again → Ship. Yes, FIVE review rounds. Architecture. Security. Resilience. Performance. Testing. In that order. Here's why each one matters..." | Practice #2 deep-dive |
 | Thu | X | Evidence | "How many review rounds do you do before shipping AI-generated code? If the answer is less than 5, you're shipping bugs. Here's the 5-round framework I use across 40+ production services." | Challenge + framework |
@@ -164,11 +164,11 @@ Before posting a single piece of content:
 
 ### WEEK 4: The Evidence (Numbers Nobody Else Has)
 
-**Theme**: Weaponize your data. Nobody else has 72 sessions of tracked AI development metrics.
+**Theme**: Weaponize your data. Nobody else has 1,117 sessions of tracked AI development metrics.
 
 | Day | Platform | Pillar | Content | Hook |
 |-----|----------|--------|---------|------|
-| Mon | LinkedIn | Evidence | "72 sessions. 3 eras. Here's how AI-assisted development actually evolves in an enterprise:" Era 1 (Exploration): 200-500 msgs/session, high effort, variable quality. Era 2 (Methodology): Structured approach, consistent quality, trust calibrated. Era 3 (Multiplication): Templates flowing, multi-agent orchestration, repeatable patterns. "Most teams are stuck in Era 1. Here's how to get to Era 3." | Data-driven framework |
+| Mon | LinkedIn | Evidence | "1,117 sessions across 3 eras. Here's how AI-assisted development actually evolves in an enterprise:" Era 1 (Exploration): 200-500 msgs/session, high effort, variable quality. Era 2 (Methodology): Structured approach, consistent quality, trust calibrated. Era 3 (Multiplication): Templates flowing, multi-agent orchestration, repeatable patterns. "Most teams are stuck in Era 1. Here's how to get to Era 3." | Data-driven framework |
 | Mon | X | Evidence | "3 Eras of AI adoption in enterprise: Era 1: 'Whoa this is cool' Era 2: 'Wait, this broke production' Era 3: 'OK here's the system' Most companies are in Era 1 pretending to be in Era 3. I have 20 months of data showing the difference." | Provocative categorization |
 | Tue | LinkedIn | Toolkit | "Here's the exact Copilot prompt I use to deep-onboard any new repository. It generates an 8-document technical audit. It's free." [Share the deep-onboarding.prompt.md content formatted as a LinkedIn post + link to repo] | Free high-value giveaway |
 | Tue | X | Toolkit | "Free tool: The exact prompt I use to make GitHub Copilot deep-onboard a repository. 8-document output covering architecture, integrations, tests, deployment, and tech debt. Copy-paste ready. [link]" | Utility + generosity |
@@ -300,7 +300,7 @@ Every major piece of content should live in at least 4 formats:
 
 1. "Vibe Coding vs. Agentic Engineering" — side-by-side comparison (7 slides)
 2. "The 10 Commandments" — one per slide with icon/visual
-3. "72 Sessions: What I Learned" — data highlights with commentary
+3. "1,117 Sessions: What I Learned" — data highlights with commentary
 4. "5 Review Rounds" — what each round catches (with examples)
 5. "16 Anti-Patterns" — top 5 most dangerous, one per slide
 6. "3 Eras of AI Adoption" — visual journey with data

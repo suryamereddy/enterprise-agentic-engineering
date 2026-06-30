@@ -73,7 +73,7 @@ cat <<DONE
 
 NEXT:
   1. Fill in <…> in the principles / copilot-instructions (tech stack, conventions).
-  2. Add your secret literals to secret-patterns.txt (repo) — and personal creds to ~/.copilot/prompts/creds-index.prompt.md.
+  2. Add your secret literals to secret-patterns.txt (repo). Customize ~/.copilot/prompts/creds-index.prompt.md with YOUR services' fetch commands/locations — never literal secret values.
   3. In Chat: /done-check · /adversarial-review · /diagnose ; pick a reviewer from the agents dropdown.
   4. Turn on GitHub push protection + make "Pre-ship check" a required status check.
 DONE

@@ -16,7 +16,7 @@ Pick the reviewer count by diff size + risk so small changes are cheap:
 |---|---|---|
 | Trivial (≤~30 lines, no logic/prod path) | **0–1** | one `@adversarial-reviewer` pass, or a careful self-review |
 | Normal feature/fix | **1–2** | `@adversarial-reviewer` (+ your repo-specific reviewer if the repo has one) |
-| Large / risky / touches prod / data migration / contract | **3** | 3 independent reviewers, no shared context — prefer 2 repo-aware + 1 generic (`@adversarial-reviewer`, `@security-auditor`) for diversity |
+| Large / risky / touches prod / data migration / contract | **3** | 3 independent reviewers, no shared context — prefer 2 repo-aware + 1 generic (`@adversarial-reviewer`, `@security-reviewer`) for diversity |
 
 ```
 # scope first, then scale:

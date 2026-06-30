@@ -11,7 +11,7 @@
 
 ---
 
-*One engineer. 72 AI sessions. 2,938 interactions. 12+ production applications built or transformed.*
+*One engineer. 1,117 AI sessions · 780 MB of transcripts · 20 months. 12+ production applications built or transformed.*
 *40+ microservices. 3M+ database records. 4,000–6,000 hours of manual work replaced.*
 
 **This is not a tutorial. This is not a demo. This is a battle-tested framework extracted from 20 months of shipping production software with AI — across Java, .NET, Python, TypeScript, and Node.js on multi-cloud infrastructure.**
@@ -38,30 +38,31 @@ This repository fills that gap.
 
 ## The Numbers
 
-These are not projections. These are actuals — extracted from 20 months of tracked AI development sessions across a Fortune 500 enterprise engineering organization.
+These are not projections. They are actuals — measured where the column says *measured*, honestly labeled *estimate* or *portfolio aggregate* where they are not. (The same measured-vs-estimate split is shown in the [talk deck](talk/).)
 
-| Metric | Value |
-|--------|-------|
-| **AI development sessions** | 72 |
-| **Human-to-AI interactions** | 2,938 |
-| **Production applications built or transformed** | 12+ |
-| **Production microservices managed** | 40+ |
-| **Estimated manual hours replaced** | 4,000–6,000+ |
-| **Database records managed** | 3,000,000+ |
-| **Deployment pipelines created** | 15+ |
-| **Legacy middleware APIs eliminated** | 3 full replacements |
-| **Documentation files generated** | 600+ |
-| **Code review cycles conducted** | 150+ |
-| **Time span** | 20 months |
-| **Tech stack breadth** | 22+ technologies |
+| Metric | Value | Basis |
+|--------|-------|-------|
+| **AI development sessions** | 1,117 | measured (transcript count, live machine) |
+| **Transcript volume** | 780 MB | measured |
+| **Time span** | 20 months | measured |
+| **Deeply-analyzed sessions** | 72 · 2,938 messages | measured — the qualitative basis for this repo |
+| **Production applications built or transformed** | 12+ | portfolio aggregate |
+| **Production microservices managed** | 40+ | portfolio aggregate |
+| **Database records managed** | 3,000,000+ | portfolio aggregate |
+| **Legacy middleware APIs eliminated** | 3 full replacements | portfolio aggregate |
+| **Deployment pipelines created** | 15+ | portfolio aggregate |
+| **Tech stack breadth** | 22+ technologies | measured |
+| **Estimated manual hours replaced** | 4,000–6,000+ | estimate |
+| **Documentation files generated** | 600+ | estimate |
+| **Code review cycles conducted** | 150+ | estimate |
 
-The 6 largest sessions (8% of total) produced 47.5% of all messages — evidence that the highest-value AI work happens in sustained, deep-focus sessions, not scattered autocomplete.
+Within the 72 deeply-analyzed sessions, the 6 largest (8%) produced 47.5% of all messages — evidence that the highest-value AI work happens in sustained, deep-focus sessions, not scattered autocomplete.
 
 ---
 
 ## Three Eras of AI Adoption
 
-Every engineering team adopting AI goes through these phases. We tracked ours with data.
+Every engineering team adopting AI goes through these phases. We tracked ours with data — the era breakdown below is drawn from the 72 deeply-analyzed sessions (2,938 messages) within the 1,117-session corpus.
 
 ### Era 1: Exploration (Months 1–13)
 > *6 sessions · 119 messages · "What can this thing do?"*
@@ -152,7 +153,8 @@ Forged from 72 sessions and multiple production incidents. Print it. Pin it. Liv
 | 8 | **Hash Before You Process** | SHA-256 delta detection to avoid redundant work |
 | 9 | **Dry-Run Before Live** | Data migration tools must have `--dry-run` mode |
 | 10 | **Pin Your Dependencies** | SHA-pinned actions, version-locked packages, no floating refs |
-| 11 | **Never Commit a Secret** | Secrets reach prod via a secret manager, never source — enforced by a 3-layer commit blocker |
+
+> **And one standing rule that underpins all ten:** *Never commit a secret.* Secrets reach prod via a secret manager, never source — enforced by the 3-layer commit blocker in the [operational harness](docs/operational-harness.md). It's not numbered here because it's non-negotiable, not optional. *(The [talk deck](talk/) elevates it to an explicit 11th commandment, since the live secret-block demo is the talk's cold open.)*
 
 > **Note on Commandment 3 (refined):** "5+ rounds always" was right early on but wasteful on trivial diffs and insufficient on contract changes. The review is now a **gate at the commit/PR boundary**, with reviewer count **scaled to the change** (0–1 for trivial, up to 3 for prod/contract). See [The Operational Harness](docs/operational-harness.md).
 
@@ -213,6 +215,7 @@ enterprise-agentic-engineering/
 │   │   ├── bug-investigation.prompt.md
 │   │   ├── test-generation.prompt.md
 │   │   ├── cicd-pipeline.prompt.md
+│   │   ├── infrastructure-builder.prompt.md
 │   │   ├── streaming-design.prompt.md
 │   │   ├── database-operations.prompt.md
 │   │   └── api-migration.prompt.md
@@ -284,7 +287,7 @@ The goal of this repository is not to convince anyone that AI is the future. It'
 
 ## The Trust Evolution
 
-Tracked across 72 sessions. This is what healthy AI trust looks like:
+Tracked across the 72 deeply-analyzed sessions. This is what healthy AI trust looks like:
 
 ```
 Sessions 1-6:    "Explain this"                    → Trust Level: 🟡 Low
@@ -333,7 +336,7 @@ The methodology is tech-stack-agnostic, but for context, these are the technolog
 
 <div align="center">
 
-**20 months. 72 sessions. 2,938 messages. One continuous methodology.**
+**20 months. 1,117 sessions. 780 MB of transcripts. One continuous methodology.**
 
 *Not vibe coding. Not a demo. Enterprise engineering with AI — proven in production.*
 

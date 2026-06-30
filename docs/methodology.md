@@ -2,7 +2,7 @@
 
 ### Six practices for AI-assisted development at enterprise scale
 
-> *Extracted from 72 AI development sessions across 40+ production microservices. Each practice was developed iteratively and validated across multiple production projects.*
+> *Extracted from a 1,117-session, 20-month AI development corpus (72 of them deeply analyzed) across 40+ production microservices. Each practice was developed iteratively and validated across multiple production projects.*
 
 ---
 
@@ -398,6 +398,8 @@ The methodology distilled into a quick-reference card:
 | 8 | **Hash Before You Process** | SHA-256 delta detection to avoid redundant work |
 | 9 | **Dry-Run Before Live** | Data migration tools must have `--dry-run` mode |
 | 10 | **Pin Your Dependencies** | SHA-pinned actions, version-locked packages, no floating refs |
+
+> Plus one non-negotiable standing rule: **Never commit a secret** — enforced by the 3-layer commit blocker in the [operational harness](operational-harness.md). It's kept unnumbered here; the [talk deck](../talk/) presents it as an explicit 11th commandment because the live secret-block demo opens the talk.
 
 ---
 

@@ -179,7 +179,7 @@ These practices emerged from failure, were refined through production, and are b
 
 They are also incomplete. This is not the final word on enterprise AI engineering. The methodology will continue to evolve as AI capabilities improve, team adoption produces new patterns, and new failure modes are discovered.
 
-But here's what we know after 72 sessions and 2,938 interactions:
+But here's what we know after 1,117 measured sessions over 20 months — 72 of them deeply analyzed across 2,938 interactions:
 
 **The gap between engineers with a methodology and engineers without one is not closing. It is widening. Every month.**
 
